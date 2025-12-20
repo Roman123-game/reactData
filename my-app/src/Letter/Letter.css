@@ -1,0 +1,42 @@
+.bonus-letter-switch {
+  position: absolute;
+  z-index: 2;
+  font-size: 48px;
+  cursor: pointer;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.bonus-letter-switch.hidden {
+  opacity: 0;
+}
+
+.bonus-letter-switch.shown {
+  opacity: 1;
+  animation: float 2s ease-in-out infinite;
+} 
+
+.bonus-letter-switch.available {
+  pointer-events: all;
+} 
+
+.bonus-letter-switch.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.bonus-letter-switch.collected {
+  animation: collect 0.6s forwards;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes collect {
+  to {
+    transform: translateY(-40px) scale(0);
+    opacity: 0;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Letter from "./Letter/Letter";
 
 export default function App() {
   const [string1, setString1] = useState("");
@@ -49,7 +50,9 @@ export default function App() {
 
   return (
     <div className="p-4 max-w-md mx-auto">
+
       <h1 className="text-xl font-bold mb-4">Send Strings to Localhost</h1>
+          <Letter/>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="text"
