@@ -4,6 +4,7 @@ export default function ChristmasTree() {
     return (
         <div className="xmas-container">
             <div className="xmas-star">⭐</div>
+            <div className="top-bow"></div>
 
             <div className="xmas-tree">
                 <div className="tree-layer layer-top"></div>
@@ -13,6 +14,11 @@ export default function ChristmasTree() {
                 <div className="garland g1"></div>
                 <div className="garland g2"></div>
 
+                <div className="snow snow-top"></div>
+                <div className="snow snow-mid"></div>
+                <div className="snow snow-bottom"></div>
+                <span className="bell b1"></span>
+                <span className="bell b2"></span>
                 <span className="ornament red o1" />
                 <span className="ornament gold o2" />
                 <span className="ornament blue o3" />

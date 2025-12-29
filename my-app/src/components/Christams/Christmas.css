@@ -394,3 +394,82 @@
 .present:hover .gift-modal-content {
   transform: scale(1);
 }
+.top-bow {
+  position: absolute;
+  top: 45px;
+  left: 50%;
+  width: 26px;
+  height: 12px;
+  background: #e53935;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  z-index: 10;
+}
+
+.top-bow::before,
+.top-bow::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  background: #d32f2f;
+  border-radius: 50%;
+  top: 1px;
+}
+
+.top-bow::before { left: -10px; }
+.top-bow::after { right: -10px; }
+.light {
+  box-shadow:
+    0 0 6px currentColor,
+    0 0 12px currentColor;
+}
+.bell {
+  position: absolute;
+  width: 14px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 30%, #ffeb3b, #f9a825);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,.3);
+}
+
+.bell::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 6px;
+  height: 4px;
+  background: #b8860b;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.b1 { top: 90px; left: 110px; }
+.b2 { top: 125px; left: 135px; }
+
+.snow {
+  position: absolute;
+  height: 10px;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,.15);
+}
+
+.snow-top {
+  width: 70px;
+  top: 50px;
+  left: 75px;
+}
+
+.snow-mid {
+  width: 100px;
+  top: 115px;
+  left: 60px;
+}
+
+.snow-bottom {
+  width: 140px;
+  top: 178px;
+  left: 40px;
+}
