@@ -299,9 +299,47 @@
     transform: scale(1);
 }
 
+
+/* MODAL OVERLAY */
+.gift-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease;
+  z-index: 999;
+}
+
+/* SHOW MODAL ONLY ON HOVER */
+.p2:hover .gift-modal {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* MODAL CONTENT */
+.gift-modal-content {
+  background: radial-gradient(circle, #ffffff, #f3f4f6);
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.4),
+    0 0 30px rgba(255,255,255,.6);
+  transform: scale(.85);
+  transition: transform .35s ease;
+}
+
+.p2:hover .gift-modal-content {
+  transform: scale(1);
+}
+
+/* TEDDY SVG */
 .teddy-svg {
-    width: 34px;
-    height: 34px;
-    filter:
-        drop-shadow(0 2px 4px rgba(0, 0, 0, .35)) drop-shadow(0 0 6px rgba(255, 255, 255, .4));
+  width: 120px;
+  height: 120px;
+  filter:
+    drop-shadow(0 6px 10px rgba(0,0,0,.35))
+    drop-shadow(0 0 12px rgba(255,255,255,.5));
 }

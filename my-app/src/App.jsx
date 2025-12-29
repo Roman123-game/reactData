@@ -2,51 +2,51 @@ import { useState } from "react";
 import ChristmasTree from "./components/Christams/Christmas";
 
 export default function App() {
-  const [string1, setString1] = useState("");
-  const [string2, setString2] = useState("");
-  const [response, setResponse] = useState(null);
-  const [mongoData, setMongoData] = useState(null); // State to store fetched MongoDB data
+  // const [string1, setString1] = useState("");
+  // const [string2, setString2] = useState("");
+  // const [response, setResponse] = useState(null);
+  // const [mongoData, setMongoData] = useState(null); // State to store fetched MongoDB data
   const [congrats, setCongrats] = useState("Happy Holidays! UrName");
-  const handleSubmit = async (e) => {
-    const string1 = "Hello";
-    const string2 = "World";
-    e.preventDefault();
-    try {
-      const res = await fetch("https://server-production-7756.up.railway.app/addData", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ string1, string2 }),
-      });
+  // const handleSubmit = async (e) => {
+  //   const string1 = "Hello";
+  //   const string2 = "World";
+  //   e.preventDefault();
+  //   try {
+  //     const res = await fetch("https://server-production-7756.up.railway.app/addData", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ string1, string2 }),
+  //     });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP error! Status: ${res.status}`);
+  //     }
 
-      const text = await res.text(); // Get response as text
-      const data = text ? JSON.parse(text) : { message: "No response from server" }; // Parse only if not empty
+  //     const text = await res.text(); // Get response as text
+  //     const data = text ? JSON.parse(text) : { message: "No response from server" }; // Parse only if not empty
 
-      setResponse(data.message);
-    } catch (error) {
-      console.error("Error sending data:", error);
-      setResponse("Failed to send data");
-    }
-  };
+  //     setResponse(data.message);
+  //   } catch (error) {
+  //     console.error("Error sending data:", error);
+  //     setResponse("Failed to send data");
+  //   }
+  // };
 
-  // Fetch MongoDB data on button click
-  const fetchMongoData = async () => {
-    try {
-      const res = await fetch("https://server-production-7756.up.railway.app/getData");
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
+  // // Fetch MongoDB data on button click
+  // const fetchMongoData = async () => {
+  //   try {
+  //     const res = await fetch("https://server-production-7756.up.railway.app/getData");
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP error! Status: ${res.status}`);
+  //     }
 
-      const data = await res.json();
-      setMongoData(data); // Store the fetched data
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setMongoData("Failed to fetch data");
-    }
-  };
+  //     const data = await res.json();
+  //     setMongoData(data); // Store the fetched data
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setMongoData("Failed to fetch data");
+  //   }
+  // };
 
   return (
     <div className="main">
