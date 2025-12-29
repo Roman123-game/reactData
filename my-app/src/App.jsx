@@ -6,7 +6,7 @@ export default function App() {
   // const [string2, setString2] = useState("");
   // const [response, setResponse] = useState(null);
   // const [mongoData, setMongoData] = useState(null); // State to store fetched MongoDB data
-  const [congrats, setCongrats] = useState("Happy Holidays! UrName");
+  const [congrats, setCongrats] = useState("С новым годом! 🎉🎄");
   // const handleSubmit = async (e) => {
   //   const string1 = "Hello";
   //   const string2 = "World";
