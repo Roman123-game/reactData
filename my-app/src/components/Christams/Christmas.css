@@ -343,3 +343,54 @@
     drop-shadow(0 6px 10px rgba(0,0,0,.35))
     drop-shadow(0 0 12px rgba(255,255,255,.5));
 }
+.p1:hover .gift-modal {
+  opacity: 1;
+  visibility: visible;
+}
+.present:hover .gift-modal {
+  opacity: 1;
+  visibility: visible;
+}
+.train-svg {
+  width: 160px;
+  height: auto;
+  filter:
+    drop-shadow(0 6px 10px rgba(0,0,0,.35))
+    drop-shadow(0 0 12px rgba(255,255,255,.45));
+}
+.candy-svg {
+  width: 100px;
+  height: auto;
+  filter:
+    drop-shadow(0 6px 10px rgba(0,0,0,.35))
+    drop-shadow(0 0 10px rgba(255,255,255,.45));
+}
+.present:hover .gift-modal {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gift-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease;
+  z-index: 999;
+}
+
+.gift-modal-content {
+  background: radial-gradient(circle, #ffffff, #f3f4f6);
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4), 0 0 30px rgba(255,255,255,.6);
+  transform: scale(.85);
+  transition: transform .35s ease;
+}
+
+.present:hover .gift-modal-content {
+  transform: scale(1);
+}
