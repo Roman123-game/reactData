@@ -1,0 +1,191 @@
+.xmas-container {
+  position: relative;
+  width: 260px;
+  margin: 60px auto;
+}
+
+/* STAR */
+.xmas-star {
+  text-align: center;
+  font-size: 34px;
+  color: #ffd54f;
+  filter: drop-shadow(0 0 10px gold);
+  animation: starPulse 2s infinite alternate;
+}
+
+/* TREE */
+.xmas-tree {
+  position: relative;
+  margin-top: -8px;
+}
+
+/* TREE LAYERS USING CLIP-PATH */
+.tree-layer {
+  margin: 0 auto;
+  height: 90px;
+  background: linear-gradient(135deg, #0b5d3b, #2ecc71);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,.25));
+}
+
+.layer-top {
+  width: 120px;
+}
+
+.layer-middle {
+  width: 170px;
+  margin-top: -28px;
+  background: linear-gradient(135deg, #0e6f45, #34d399);
+}
+
+.layer-bottom {
+  width: 220px;
+  margin-top: -32px;
+  background: linear-gradient(135deg, #117a4d, #3ddc97);
+}
+
+/* GARLANDS */
+.garland {
+  position: absolute;
+  height: 22px;
+  border-bottom: 3px solid rgba(255,255,255,0.7);
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.g1 {
+  width: 130px;
+  top: 85px;
+}
+
+.g2 {
+  width: 180px;
+  top: 140px;
+}
+
+/* ORNAMENTS */
+.ornament {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,.4),
+              0 0 6px rgba(255,255,255,.4);
+}
+
+.red { background: radial-gradient(circle at 30% 30%, #ff6b6b, #b71c1c); }
+.gold { background: radial-gradient(circle at 30% 30%, #fff3c4, #ffb300); }
+.blue { background: radial-gradient(circle at 30% 30%, #81d4fa, #01579b); }
+.purple { background: radial-gradient(circle at 30% 30%, #ce93d8, #6a1b9a); }
+
+.o1 { top: 70px; left: 115px; }
+.o2 { top: 95px; left: 80px; }
+.o3 { top: 100px; left: 150px; }
+.o4 { top: 145px; left: 100px; }
+.o5 { top: 145px; left: 160px; }
+
+/* LIGHTS */
+.light {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff176;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #fff59d;
+  animation: blink 1.5s infinite alternate;
+}
+
+.l1 { top: 65px; left: 95px; animation-delay: 0s; }
+.l2 { top: 80px; left: 135px; animation-delay: .3s; }
+.l3 { top: 110px; left: 70px; animation-delay: .6s; }
+.l4 { top: 120px; left: 170px; animation-delay: .9s; }
+.l5 { top: 155px; left: 110px; animation-delay: 1.2s; }
+.l6 { top: 155px; left: 155px; animation-delay: 1.5s; }
+
+/* TRUNK */
+.tree-trunk {
+  width: 36px;
+  height: 42px;
+  background: linear-gradient(#6d4c41, #4e342e);
+  margin: -5px auto 0;
+  border-radius: 6px;
+}
+
+/* SHADOW */
+.tree-shadow {
+  width: 140px;
+  height: 16px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.35), transparent);
+  margin: 6px auto 0;
+}
+
+/* ANIMATIONS */
+@keyframes blink {
+  from { opacity: .3; }
+  to { opacity: 1; }
+}
+
+@keyframes starPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+/* PRESENTS CONTAINER */
+.presents {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: -10px;
+}
+
+/* PRESENT BOX */
+.present {
+  position: relative;
+  border-radius: 6px;
+  box-shadow: 0 8px 10px rgba(0,0,0,.25);
+}
+
+/* DIFFERENT SIZES */
+.p1 { width: 52px; height: 38px; }
+.p2 { width: 44px; height: 44px; margin-top: 8px; }
+.p3 { width: 60px; height: 42px; }
+
+/* BOX COLORS */
+.p1 { background: linear-gradient(135deg, #e53935, #b71c1c); }
+.p2 { background: linear-gradient(135deg, #1e88e5, #0d47a1); }
+.p3 { background: linear-gradient(135deg, #fbc02d, #f57f17); }
+
+/* RIBBONS */
+.ribbon-v,
+.ribbon-h {
+  position: absolute;
+  background: rgba(255,255,255,0.85);
+}
+
+.ribbon-v {
+  width: 8px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ribbon-h {
+  height: 8px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* OPTIONAL BOW EFFECT */
+.present::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: rgba(255,255,255,.9);
+  border-radius: 50%;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Letter from "./Letter/Letter";
+import ChristmasTree from "./components/Christams/Christmas";
 
 export default function App() {
   const [string1, setString1] = useState("");
   const [string2, setString2] = useState("");
   const [response, setResponse] = useState(null);
   const [mongoData, setMongoData] = useState(null); // State to store fetched MongoDB data
-
+ 
   const handleSubmit = async (e) => {
     const string1 = "Hello";
     const string2 = "World";
@@ -52,7 +52,7 @@ export default function App() {
     <div className="p-4 max-w-md mx-auto">
 
       <h1 className="text-xl font-bold mb-4">Send Strings to Localhost</h1>
-          <Letter/>
+          <ChristmasTree/>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="text"
