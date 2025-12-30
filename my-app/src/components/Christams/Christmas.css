@@ -22,6 +22,7 @@
 }
 
 .tree-layer {
+    position: relative;
     margin: 0 auto;
     height: 90px;
     background: linear-gradient(135deg, #0b5d3b, #2ecc71);
@@ -31,15 +32,19 @@
 
 .layer-top {
     width: 120px;
+    z-index: 3;
 }
 
 .layer-middle {
+    z-index: 2;
     width: 170px;
     margin-top: -28px;
     background: linear-gradient(135deg, #0e6f45, #34d399);
 }
 
-.layer-bottom {
+.layer-bottom 
+{
+    z-index: 1;
     width: 220px;
     margin-top: -32px;
     background: linear-gradient(135deg, #117a4d, #3ddc97);
@@ -47,6 +52,7 @@
 
 /* GARLANDS */
 .garland {
+    z-index: 5;
     position: absolute;
     height: 22px;
     border-bottom: 3px solid rgba(255, 255, 255, 0.7);
@@ -56,17 +62,20 @@
 }
 
 .g1 {
+    z-index: 5;
     width: 130px;
     top: 85px;
 }
 
 .g2 {
+    z-index: 5;
     width: 180px;
     top: 140px;
 }
 
 /* ORNAMENTS */
 .ornament {
+    z-index: 6;
     position: absolute;
     width: 14px;
     height: 14px;
@@ -118,6 +127,7 @@
 
 /* LIGHTS */
 .light {
+    z-index: 7;
     position: absolute;
     width: 8px;
     height: 8px;
@@ -449,6 +459,8 @@
 .b2 { top: 125px; left: 135px; }
 
 .snow {
+    z-index: 4;
+
   position: absolute;
   height: 10px;
   background: #fff;
