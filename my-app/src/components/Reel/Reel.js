@@ -5,9 +5,7 @@ import {
 } from "pixi.js";
 
 
-
 export class Reel extends Container {
-
 
 
     constructor(symbols){
@@ -15,40 +13,55 @@ export class Reel extends Container {
         super();
 
 
-
         this.symbols = symbols;
 
 
-
-        this.currentIndex = 0;
-
+        this.rows = 3;
 
 
-        this.spinning = false;
-
-        this.speed = 0;
+        this.currentSymbols = [];
 
 
 
-
-
-        this.sprite = new Sprite();
-
-
-
-        this.sprite.width = 100;
-
-        this.sprite.height = 100;
+        this.sprites = [];
 
 
 
-
-        this.addChild(this.sprite);
-
+        for(let i=0;i<this.rows;i++){
 
 
+            const sprite =
+                new Sprite();
 
-        this.setRandomSymbol();
+
+
+            sprite.width = 90;
+
+            sprite.height = 90;
+
+
+
+            sprite.y = i * 95;
+
+
+
+            this.addChild(sprite);
+
+
+
+            this.sprites.push(sprite);
+
+        }
+
+
+
+        this.spinning=false;
+
+        this.speed=0;
+
+
+
+        this.randomize();
 
 
     }
@@ -58,33 +71,37 @@ export class Reel extends Container {
 
 
 
-
-    setRandomSymbol(){
-
+    randomize(){
 
 
-        const index = Math.floor(
+        this.currentSymbols=[];
 
-            Math.random() *
-            this.symbols.length
 
+
+        this.sprites.forEach(
+            sprite=>{
+
+
+                const index =
+                    Math.floor(
+                        Math.random() *
+                        this.symbols.length
+                    );
+
+
+
+                this.currentSymbols.push(index);
+
+
+
+                sprite.texture =
+                    Assets.get(
+                        this.symbols[index]
+                    );
+
+
+            }
         );
-
-
-
-        this.currentIndex = index;
-
-
-
-        const texture =
-            Assets.get(
-                this.symbols[index]
-            );
-
-
-
-        this.sprite.texture = texture;
-
 
 
     }
@@ -98,14 +115,12 @@ export class Reel extends Container {
     start(){
 
 
-        this.spinning = true;
+        this.spinning=true;
 
-
-        this.speed = 45;
+        this.speed=50;
 
 
     }
-
 
 
 
@@ -115,18 +130,12 @@ export class Reel extends Container {
     stop(){
 
 
-        this.spinning = false;
+        this.spinning=false;
+
+        this.speed=0;
 
 
-        this.speed = 0;
-
-
-
-        this.sprite.y = 0;
-
-
-
-        this.setRandomSymbol();
+        this.randomize();
 
 
     }
@@ -136,9 +145,7 @@ export class Reel extends Container {
 
 
 
-
     update(delta){
-
 
 
         if(!this.spinning)
@@ -146,28 +153,29 @@ export class Reel extends Container {
 
 
 
-
-        this.sprite.y +=
-            this.speed * delta;
-
+        this.sprites.forEach(
+            sprite=>{
 
 
-
-
-        if(this.sprite.y > 120){
+                sprite.y +=
+                    this.speed * delta;
 
 
 
-            this.sprite.y = -120;
+                if(sprite.y > 285){
 
 
-
-            this.setRandomSymbol();
-
+                    sprite.y=-95;
 
 
-        }
+                    this.randomize();
 
+
+                }
+
+
+            }
+        );
 
 
     }
