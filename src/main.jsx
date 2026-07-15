@@ -16,6 +16,7 @@ import rocket from "./assets/rocket.png";
 import dog from "./assets/dog.png";
 import jackpot from "./assets/jackpot.png";
 import vault from "./assets/vault.png";
+import gain from "./assets/gain.png";
 
 
 const app = new Application();
@@ -29,7 +30,7 @@ async function init() {
 
   document.getElementById("root").appendChild(app.canvas);
 
-  const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault];
+  const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault,gain];
 
   // Load images into Pixi cache
   await Assets.load(symbols);
