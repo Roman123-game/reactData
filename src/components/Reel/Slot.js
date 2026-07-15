@@ -17,11 +17,8 @@ export class Reel extends Container {
 
       sprite.width = 120;
       sprite.height = 120;
-
       sprite.y = i * 120;
-
       this.addChild(sprite);
-
       this.symbols.push(sprite);
     }
 
@@ -33,10 +30,8 @@ export class Reel extends Container {
 
     this.symbols.forEach((sprite) => {
       sprite.y += this.speed * delta;
-
       if (sprite.y >= 480) {
         sprite.y -= 480;
-
         sprite.texture = Texture.from(
           this.availableSymbols[
             Math.floor(Math.random() * this.availableSymbols.length)
@@ -48,9 +43,7 @@ export class Reel extends Container {
 
   stop() {
     this.spinning = false;
-
     this.symbols.sort((a, b) => a.y - b.y);
-
     this.symbols.forEach((sprite, i) => {
       sprite.y = i * 120;
     });
