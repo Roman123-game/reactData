@@ -27,7 +27,7 @@ const app = new Application();
 async function init() {
   await app.init({
     width: 600,
-    height: 700,
+    height: 600,
     background: 0x222222,
   });
 
