@@ -1,67 +1,58 @@
-import {                                                                                      
-    Container,                                                                                
-    Sprite,                                                                                   
-    Texture                                                                                   
-} from "pixi.js";                                                                             
+import { Container, Sprite, Texture } from "pixi.js";
 
-export class Reel extends Container {                                                         
+export class Reel extends Container {
+  constructor(symbols) {
+    super();
 
-    constructor(symbols) {                                                                    
-        super();                                                                              
+    this.symbols = [];
+    this.speed = 0;
+    this.spinning = false;
 
-        this.symbols = [];                                                                    
-        this.speed = 0;                                                                       
-        this.spinning = false;                                                                
+    for (let i = 0; i < 4; i++) {
+      const texture = Texture.from(
+        symbols[Math.floor(Math.random() * symbols.length)],
+      );
 
-        for (let i = 0; i < 4; i++) {                                                         
+      const sprite = new Sprite(texture);
 
-            const texture = Texture.from(symbols[Math.floor(Math.random() * symbols.length)]);
+      sprite.width = 120;
+      sprite.height = 120;
 
-            const sprite = new Sprite(texture);                                               
+      sprite.y = i * 120;
 
-            sprite.width = 120;                                                               
-            sprite.height = 120;                                                              
+      this.addChild(sprite);
 
-            sprite.y = i * 120;                                                               
+      this.symbols.push(sprite);
+    }
 
-            this.addChild(sprite);                                                            
+    this.availableSymbols = symbols;
+  }
 
-            this.symbols.push(sprite);                                                        
-        }                                                                                     
+  update(delta) {
+    if (!this.spinning) return;
 
-        this.availableSymbols = symbols;                                                      
-    }                                                                                         
+    this.symbols.forEach((sprite) => {
+      sprite.y += this.speed * delta;
 
-    update(delta) {                                                                           
+      if (sprite.y >= 480) {
+        sprite.y -= 480;
 
-        if (!this.spinning) return;                                                           
+        sprite.texture = Texture.from(
+          this.availableSymbols[
+            Math.floor(Math.random() * this.availableSymbols.length)
+          ],
+        );
+      }
+    });
+  }
 
-        this.symbols.forEach(sprite => {                                                      
+  stop() {
+    this.spinning = false;
 
-            sprite.y += this.speed * delta;                                                   
+    this.symbols.sort((a, b) => a.y - b.y);
 
-            if (sprite.y >= 480) {                                                            
-
-                sprite.y -= 480;                                                              
-
-                sprite.texture =                                                              
-                    Texture.from(                                                             
-                        this.availableSymbols[                                                
-                            Math.floor(Math.random() * this.availableSymbols.length)          
-                        ]                                                                     
-                    );                                                                        
-            }                                                                                 
-
-        });                                                                                   
-    }                                                                                         
-
-    stop() {                                                                                  
-        this.spinning = false;                                                                
-
-        this.symbols.sort((a, b) => a.y - b.y);                                               
-
-        this.symbols.forEach((sprite, i) => {                                                 
-            sprite.y = i * 120;                                                               
-        });                                                                                   
-    }                                                                                         
+    this.symbols.forEach((sprite, i) => {
+      sprite.y = i * 120;
+    });
+  }
 }

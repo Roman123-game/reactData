@@ -1,227 +1,110 @@
-import {
-    Container,
-    Graphics,
-    Text,
-    TextStyle
-} from "pixi.js";
+import { Container, Graphics, Text, TextStyle } from "pixi.js";
 
 import { Reel } from "./Reel";
 
-
 export class SlotMachine extends Container {
+  constructor(app, symbols) {
+    super();
 
+    this.app = app;
 
-    constructor(app, symbols){
+    this.credits = 100;
 
-        super();
+    this.reels = [];
 
+    // 5 reels
+    for (let i = 0; i < 5; i++) {
+      const reel = new Reel(symbols);
 
-        this.app = app;
+      reel.x = i * 120;
 
-        this.credits = 100;
+      this.addChild(reel);
 
-        this.reels = [];
-
-
-        // 5 reels
-        for(let i = 0; i < 5; i++){
-
-
-            const reel = new Reel(symbols);
-
-
-            reel.x = i * 120;
-
-
-            this.addChild(reel);
-
-
-            this.reels.push(reel);
-
-        }
-
-
-
-        this.x =
-            app.screen.width / 2 - 300;
-
-
-        this.y = 80;
-
-
-
-
-        this.creditText = new Text({
-
-            text:`Credits: ${this.credits}`,
-
-            style:new TextStyle({
-
-                fill:"white",
-                fontSize:28
-
-            })
-
-        });
-
-
-
-        this.creditText.y = 400;
-
-
-        this.addChild(this.creditText);
-
-
-
-        this.createButton();
-
-
-
-        app.ticker.add(
-            ticker=>{
-
-                this.reels.forEach(
-                    reel =>
-                        reel.update(
-                            ticker.deltaTime
-                        )
-                );
-
-            }
-        );
-
+      this.reels.push(reel);
     }
 
+    this.x = app.screen.width / 2 - 300;
 
+    this.y = 80;
 
+    this.creditText = new Text({
+      text: `Credits: ${this.credits}`,
 
+      style: new TextStyle({
+        fill: "white",
+        fontSize: 28,
+      }),
+    });
 
+    this.creditText.y = 400;
 
-    createButton(){
+    this.addChild(this.creditText);
 
+    this.createButton();
 
-        const button = new Graphics();
+    app.ticker.add((ticker) => {
+      this.reels.forEach((reel) => reel.update(ticker.deltaTime));
+    });
+  }
 
+  createButton() {
+    const button = new Graphics();
 
-        button.roundRect(
-            0,
-            0,
-            200,
-            60,
-            15
-        );
+    button.roundRect(0, 0, 200, 60, 15);
 
+    button.fill(0x22aa55);
 
-        button.fill(0x22aa55);
+    button.y = 460;
 
+    button.eventMode = "static";
 
-        button.y = 460;
+    button.cursor = "pointer";
 
+    const text = new Text({
+      text: "SPIN",
 
-        button.eventMode="static";
+      style: {
+        fill: "white",
+        fontSize: 30,
+      },
+    });
 
-        button.cursor="pointer";
+    text.anchor.set(0.5);
 
+    text.x = 100;
 
+    text.y = 30;
 
-        const text = new Text({
+    button.addChild(text);
 
-            text:"SPIN",
+    button.on("pointerdown", () => this.spin());
 
-            style:{
-                fill:"white",
-                fontSize:30
-            }
+    this.addChild(button);
+  }
 
-        });
+  spin() {
+    this.credits--;
 
+    this.creditText.text = `Credits: ${this.credits}`;
 
+    this.reels.forEach((reel, index) => {
+      reel.start();
 
-        text.anchor.set(0.5);
+      setTimeout(
+        () => {
+          reel.stop();
 
-        text.x=100;
+          if (index === 4) {
+            this.checkWin();
+          }
+        },
+        1200 + index * 400,
+      );
+    });
+  }
 
-        text.y=30;
-
-
-
-        button.addChild(text);
-
-
-
-        button.on(
-            "pointerdown",
-            ()=>this.spin()
-        );
-
-
-
-        this.addChild(button);
-
-
-    }
-
-
-
-
-
-
-    spin(){
-
-
-        this.credits--;
-
-
-        this.creditText.text =
-            `Credits: ${this.credits}`;
-
-
-
-        this.reels.forEach(
-            (reel,index)=>{
-
-
-                reel.start();
-
-
-
-                setTimeout(()=>{
-
-
-                    reel.stop();
-
-
-
-                    if(
-                        index === 4
-                    ){
-
-                        this.checkWin();
-
-                    }
-
-
-
-                },1200 + index*400);
-
-
-
-            }
-        );
-
-
-    }
-
-
-
-
-
-
-
-    checkWin(){
-
-
-        /*
+  checkWin() {
+    /*
            result:
 
            [
@@ -234,43 +117,16 @@ export class SlotMachine extends Container {
 
         */
 
+    const result = this.reels.map((reel) => reel.currentSymbols);
 
-        const result =
-            this.reels.map(
-                reel =>
-                    reel.currentSymbols
-            );
+    // middle row example
 
+    const middle = result.map((reel) => reel[1]);
 
+    if (middle.every((value) => value === middle[0])) {
+      this.credits += 100;
 
-        // middle row example
-
-        const middle =
-            result.map(
-                reel =>
-                    reel[1]
-            );
-
-
-
-        if(
-            middle.every(
-                value =>
-                    value === middle[0]
-            )
-        ){
-
-
-            this.credits += 100;
-
-
-            this.creditText.text =
-                `🎉 JACKPOT ${this.credits}`;
-
-        }
-
-
+      this.creditText.text = `🎉 JACKPOT ${this.credits}`;
     }
-
-
+  }
 }
