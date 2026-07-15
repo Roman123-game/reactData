@@ -1,18 +1,21 @@
 import { Container, Sprite, Assets } from "pixi.js";
 
 export class Reel extends Container {
+  
   constructor(symbols) {
     super();
     this.symbols = symbols;
-    this.rows = 3;
+    this.rows = 5;
     this.currentSymbols = [];
     this.sprites = [];
+    const SYMBOL_HEIGHT = 90;
 
     for (let i = 0; i < this.rows; i++) {
       const sprite = new Sprite();
-      sprite.width = 90;
-      sprite.height = 90;
-      sprite.y = i * 95;
+      sprite.width = SYMBOL_HEIGHT;
+      sprite.height = SYMBOL_HEIGHT;
+      sprite.y = i * SYMBOL_HEIGHT;
+
       this.addChild(sprite);
       this.sprites.push(sprite);
     }
@@ -42,16 +45,17 @@ export class Reel extends Container {
     this.randomize();
   }
 
-  update(delta) {
+update(delta) {
+    const SYMBOL_HEIGHT = 90;
     if (!this.spinning) return;
 
     this.sprites.forEach((sprite) => {
-      sprite.y += this.speed * delta;
+        sprite.y += this.speed * delta;
+        
 
-      if (sprite.y > 285) {
-        sprite.y = -95;
-        this.randomize();
-      }
+        if (sprite.y >= SYMBOL_HEIGHT * this.rows) {
+            sprite.y -= SYMBOL_HEIGHT * this.rows;
+        }
     });
-  }
+}
 }

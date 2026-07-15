@@ -9,23 +9,23 @@ export class SlotMachine extends Container {
     this.credits = 100;
     this.reels = [];
     this.paylines = [
-  // Straight
-  [0, 0, 0, 0, 0], // Top
-  [1, 1, 1, 1, 1], // Middle
-  [2, 2, 2, 2, 2], // Bottom
+      // Straight
+      [0, 0, 0, 0, 0], // Top
+      [1, 1, 1, 1, 1], // Middle
+      [2, 2, 2, 2, 2], // Bottom
 
-  // Diagonals
-  [0, 1, 2, 1, 0],
-  [2, 1, 0, 1, 2],
+      // Diagonals
+      [0, 1, 2, 1, 0],
+      [2, 1, 0, 1, 2],
 
-  // V shape
-  [1, 0, 0, 0, 1],
-  [1, 2, 2, 2, 1],
+      // V shape
+      [1, 0, 0, 0, 1],
+      [1, 2, 2, 2, 1],
 
-  // Zig-zag
-  [0, 1, 0, 1, 0],
-  [2, 1, 2, 1, 2],
-];
+      // Zig-zag
+      [0, 1, 0, 1, 0],
+      [2, 1, 2, 1, 2],
+    ];
     // 5 reels
     for (let i = 0; i < 5; i++) {
       const reel = new Reel(symbols);
@@ -79,98 +79,75 @@ export class SlotMachine extends Container {
     this.creditText.text = `Credits: ${this.credits}`;
     this.reels.forEach((reel, index) => {
       reel.start();
-      setTimeout(
-        () => {
-          reel.stop();
-          if (index === 4) {this.checkWin();}
-        },
-        1200 + index * 400,
-      );
+      setTimeout(() => {
+        reel.stop();
+        if (index === 4) {
+          this.checkWin();
+        }
+      }, 1200 + index * 400);
     });
   }
 
-checkWin() {
+  checkWin() {
+    let totalWin = 0;
 
-  let totalWin = 0;
+    for (const payline of this.paylines) {
+      const line = payline.map((row, reelIndex) => {
+        return this.reels[reelIndex].currentSymbols[row];
+      });
 
-  for (const payline of this.paylines) {
+      const payout = this.checkPayline(line);
 
-    const line = payline.map((row, reelIndex) => {
-      return this.reels[reelIndex].currentSymbols[row];
-    });
+      totalWin += payout;
+    }
 
-    const payout = this.checkPayline(line);
+    if (totalWin > 0) {
+      this.credits += totalWin;
 
-    totalWin += payout;
-  }
-
-  if (totalWin > 0) {
-
-    this.credits += totalWin;
-
-    this.creditText.text =
-      `🎉 WIN +${totalWin}   Credits: ${this.credits}`;
-
-  } else {
-
-    this.creditText.text =
-      `Credits: ${this.credits}`;
-
-  }
-
-  this.updateFreeSpinText();
-}
-
-
-checkPayline(line) {
-
-  // Scatters never count on paylines
-  const symbols = line.filter(
-    symbol => symbol.type !== "scatter"
-  );
-
-  if (symbols.length === 0)
-    return 0;
-
-  const base = symbols.find(
-    symbol => symbol.type !== "wild"
-  );
-
-  // All wild
-  if (!base)
-    return 500;
-
-  let count = 0;
-
-  for (const symbol of symbols) {
-
-    if (
-      symbol.type === "wild" ||
-      symbol.name === base.name
-    ) {
-      count++;
+      this.creditText.text = `🎉 WIN +${totalWin}   Credits: ${this.credits}`;
     } else {
-      break;
+      this.creditText.text = `Credits: ${this.credits}`;
+    }
+
+    this.updateFreeSpinText();
+  }
+
+  checkPayline(line) {
+    // Scatters never count on paylines
+    const symbols = line.filter((symbol) => symbol.type !== "scatter");
+
+    if (symbols.length === 0) return 0;
+
+    const base = symbols.find((symbol) => symbol.type !== "wild");
+
+    // All wild
+    if (!base) return 500;
+
+    let count = 0;
+
+    for (const symbol of symbols) {
+      if (symbol.type === "wild" || symbol.name === base.name) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    // Need at least 3 consecutive from left
+    if (count < 3) return 0;
+
+    switch (count) {
+      case 3:
+        return base.payout;
+
+      case 4:
+        return base.payout * 3;
+
+      case 5:
+        return base.payout * 8;
+
+      default:
+        return 0;
     }
   }
-
-  // Need at least 3 consecutive from left
-  if (count < 3)
-    return 0;
-
-  switch (count) {
-
-    case 3:
-      return base.payout;
-
-    case 4:
-      return base.payout * 3;
-
-    case 5:
-      return base.payout * 8;
-
-    default:
-      return 0;
-  }
-}
 }
