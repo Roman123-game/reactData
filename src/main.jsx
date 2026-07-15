@@ -2,15 +2,21 @@ import { Application, Assets } from "pixi.js";
 
 import { SlotMachine } from "./components/Reel/SlotMachine";
 
-import cherry from "./assets/cherry.png";
-import lemon from "./assets/lemon.png";
-import bell from "./assets/bell.png";
-import seven from "./assets/seven.png";
-import diamond from "./assets/diamond.png";
+// import cherry from "./assets/cherry.png";
+// import lemon from "./assets/lemon.png";
+// import bell from "./assets/bell.png";
+// import seven from "./assets/seven.png";
+// import diamond from "./assets/diamond.png";
 import bitcoin from "./assets/bitcoin.png";
 import litherium from "./assets/litherium.png";
 import tetherium from "./assets/tetherium.png";
 import shield from "./assets/shield.png";
+import safe from "./assets/case.png";
+import rocket from "./assets/rocket.png";
+import dog from "./assets/dog.png";
+import jackpot from "./assets/jackpot.png";
+import vault from "./assets/vault.png";
+
 
 const app = new Application();
 
@@ -23,7 +29,7 @@ async function init() {
 
   document.getElementById("root").appendChild(app.canvas);
 
-  const symbols = [cherry, lemon, bell, seven, diamond, bitcoin, litherium,tetherium,shield];
+  const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault];
 
   // Load images into Pixi cache
   await Assets.load(symbols);
