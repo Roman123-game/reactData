@@ -7,6 +7,9 @@ import lemon from "./assets/lemon.png";
 import bell from "./assets/bell.png";
 import seven from "./assets/seven.png";
 import diamond from "./assets/diamond.png";
+import bitcoin from "./assets/bitcoin.png";
+import litherium from "./assets/litherium.png";
+import tetherium from "./assets/tetherium.png";
 
 const app = new Application();
 
@@ -19,7 +22,7 @@ async function init() {
 
   document.getElementById("root").appendChild(app.canvas);
 
-  const symbols = [cherry, lemon, bell, seven, diamond];
+  const symbols = [cherry, lemon, bell, seven, diamond, bitcoin, litherium,tetherium];
 
   // Load images into Pixi cache
   await Assets.load(symbols);
