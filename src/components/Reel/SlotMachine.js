@@ -8,6 +8,24 @@ export class SlotMachine extends Container {
     this.app = app;
     this.credits = 100;
     this.reels = [];
+    this.paylines = [
+  // Straight
+  [0, 0, 0, 0, 0], // Top
+  [1, 1, 1, 1, 1], // Middle
+  [2, 2, 2, 2, 2], // Bottom
+
+  // Diagonals
+  [0, 1, 2, 1, 0],
+  [2, 1, 0, 1, 2],
+
+  // V shape
+  [1, 0, 0, 0, 1],
+  [1, 2, 2, 2, 1],
+
+  // Zig-zag
+  [0, 1, 0, 1, 0],
+  [2, 1, 2, 1, 2],
+];
     // 5 reels
     for (let i = 0; i < 5; i++) {
       const reel = new Reel(symbols);
@@ -71,17 +89,88 @@ export class SlotMachine extends Container {
     });
   }
 
-  checkWin() {
+checkWin() {
 
-    const result = this.reels.map((reel) => reel.currentSymbols);
+  let totalWin = 0;
 
-    // middle row example
+  for (const payline of this.paylines) {
 
-    const middle = result.map((reel) => reel[1]);
+    const line = payline.map((row, reelIndex) => {
+      return this.reels[reelIndex].currentSymbols[row];
+    });
 
-    if (middle.every((value) => value === middle[0])) {
-      this.credits += 100;
-      this.creditText.text = `🎉 JACKPOT ${this.credits}`;
+    const payout = this.checkPayline(line);
+
+    totalWin += payout;
+  }
+
+  if (totalWin > 0) {
+
+    this.credits += totalWin;
+
+    this.creditText.text =
+      `🎉 WIN +${totalWin}   Credits: ${this.credits}`;
+
+  } else {
+
+    this.creditText.text =
+      `Credits: ${this.credits}`;
+
+  }
+
+  this.updateFreeSpinText();
+}
+
+
+checkPayline(line) {
+
+  // Scatters never count on paylines
+  const symbols = line.filter(
+    symbol => symbol.type !== "scatter"
+  );
+
+  if (symbols.length === 0)
+    return 0;
+
+  const base = symbols.find(
+    symbol => symbol.type !== "wild"
+  );
+
+  // All wild
+  if (!base)
+    return 500;
+
+  let count = 0;
+
+  for (const symbol of symbols) {
+
+    if (
+      symbol.type === "wild" ||
+      symbol.name === base.name
+    ) {
+      count++;
+    } else {
+      break;
     }
   }
+
+  // Need at least 3 consecutive from left
+  if (count < 3)
+    return 0;
+
+  switch (count) {
+
+    case 3:
+      return base.payout;
+
+    case 4:
+      return base.payout * 3;
+
+    case 5:
+      return base.payout * 8;
+
+    default:
+      return 0;
+  }
+}
 }
