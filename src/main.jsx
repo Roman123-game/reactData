@@ -8,6 +8,7 @@ import { SlotMachine } from "./components/Reel/SlotMachine";
 // import seven from "./assets/seven.png";
 // import diamond from "./assets/diamond.png";
 import bitcoin from "./assets/bitcoin.png";
+import etherium from "./assets/etherium.png";
 import litherium from "./assets/litherium.png";
 import tetherium from "./assets/tetherium.png";
 import shield from "./assets/shield.png";
@@ -30,7 +31,7 @@ async function init() {
 
   document.getElementById("root").appendChild(app.canvas);
 
-  const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault,gain];
+  const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault,gain,etherium ];
 
   // Load images into Pixi cache
   await Assets.load(symbols);
