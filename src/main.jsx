@@ -22,25 +22,106 @@ import wild from "./assets/wild.png";
 import shiledtwo from "./assets/shiledtwo.png";
 
 
+const symbols = [
+  {
+    name: "Bitcoin",
+    texture: bitcoin,
+    payout: 20,
+    type: "normal",
+  },
+  {
+    name: "Ethereum",
+    texture: etherium,
+    payout: 25,
+    type: "normal",
+  },
+  {
+    name: "Litecoin",
+    texture: litherium,
+    payout: 15,
+    type: "normal",
+  },
+  {
+    name: "Tether",
+    texture: tetherium,
+    payout: 10,
+    type: "normal",
+  },
+  {
+    name: "Shield",
+    texture: shield,
+    payout: 30,
+    type: "normal",
+  },
+  {
+    name: "Safe",
+    texture: safe,
+    payout: 35,
+    type: "normal",
+  },
+  {
+    name: "Rocket",
+    texture: rocket,
+    payout: 40,
+    type: "normal",
+  },
+  {
+    name: "Dog",
+    texture: dog,
+    payout: 50,
+    type: "normal",
+  },
+  {
+    name: "Jackpot",
+    texture: jackpot,
+    payout: 100,
+    type: "normal",
+  },
+  {
+    name: "Vault",
+    texture: vault,
+    payout: 80,
+    type: "normal",
+  },
+  {
+    name: "Gain",
+    texture: gain,
+    payout: 60,
+    type: "normal",
+  },
+  {
+    name: "Wild",
+    texture: wild,
+    payout: 0,
+    type: "wild",
+  },
+  {
+    name: "Shield Two",
+    texture: shiledtwo,
+    payout: 45,
+    type: "normal",
+  },
+];
+
 const app = new Application();
 
 async function init() {
   await app.init({
-    width: 600,
+    width: 800,
     height: 800,
     background: 0x222222,
   });
 
   document.getElementById("root").appendChild(app.canvas);
 
-  const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault,gain,etherium,wild,shiledtwo];
+  // const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault,gain,etherium,wild,shiledtwo];
 
   // Load images into Pixi cache
-  await Assets.load(symbols);
+await Assets.load(symbols.map(symbol => symbol.texture));
 
   const slotMachine = new SlotMachine(app, symbols);
 
-  app.stage.addChild(slotMachine);
+app.stage.addChild(slotMachine);
 }
 
 init();

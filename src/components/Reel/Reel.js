@@ -1,7 +1,6 @@
 import { Container, Sprite, Assets } from "pixi.js";
 
 export class Reel extends Container {
-  
   constructor(symbols) {
     super();
     this.symbols = symbols;
@@ -28,9 +27,10 @@ export class Reel extends Container {
   randomize() {
     this.currentSymbols = [];
     this.sprites.forEach((sprite) => {
-      const index = Math.floor(Math.random() * this.symbols.length);
-      this.currentSymbols.push(index);
-      sprite.texture = Assets.get(this.symbols[index]);
+      const symbol =
+        this.symbols[Math.floor(Math.random() * this.symbols.length)];
+      this.currentSymbols.push(symbol);
+      sprite.texture = Assets.get(symbol.texture);
     });
   }
 
@@ -47,15 +47,15 @@ export class Reel extends Container {
 
 update(delta) {
     const SYMBOL_HEIGHT = 90;
+
     if (!this.spinning) return;
 
     this.sprites.forEach((sprite) => {
         sprite.y += this.speed * delta;
-        
 
         if (sprite.y >= SYMBOL_HEIGHT * this.rows) {
             sprite.y -= SYMBOL_HEIGHT * this.rows;
         }
     });
-}
+} 
 }

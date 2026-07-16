@@ -44,7 +44,7 @@ export class SlotMachine extends Container {
       }),
     });
 
-    this.creditText.y = 400;
+    this.creditText.y = 520;
     this.addChild(this.creditText);
     this.createButton();
     app.ticker.add((ticker) => {
@@ -56,7 +56,7 @@ export class SlotMachine extends Container {
     const button = new Graphics();
     button.roundRect(0, 0, 200, 60, 15);
     button.fill(0x22aa55);
-    button.y = 460;
+    button.y = 560;
     button.eventMode = "static";
     button.cursor = "pointer";
     const text = new Text({
