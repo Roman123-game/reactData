@@ -1,4 +1,4 @@
-import bitcoin from "../assets/bitcoin.png";
+import bitcoin from "../assets/bitcoinOne.png";
 import etherium from "../assets/etherium.png";
 import litherium from "../assets/litherium.png";
 import tetherium from "../assets/tetherium.png";
@@ -11,8 +11,15 @@ import vault from "../assets/vault.png";
 import gain from "../assets/gain.png";
 import wild from "../assets/wild.png";
 import shiledtwo from "../assets/shiledtwo.png"; 
+import hrp from "../assets/hrp.png"; 
  
  export const symbols = [
+    {
+    name: "Hrp",
+    texture: hrp,
+    payout: 0,
+    type: "normal",
+  },
   {
     name: "Bitcoin",
     texture: bitcoin,
