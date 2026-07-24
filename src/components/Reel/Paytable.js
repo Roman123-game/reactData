@@ -55,9 +55,9 @@ export class Paytable extends Container {
 
       const info = new Text({
         text: `${symbol.name}
-3x = ${symbol.payout}
-4x = ${symbol.payout * 3}
-5x = ${symbol.payout * 8}`,
+        3x = ${symbol.payout}
+        4x = ${symbol.payout * 3}
+        5x = ${symbol.payout * 8}`,
         style: new TextStyle({
           fill: "white",
           fontSize: 12,
