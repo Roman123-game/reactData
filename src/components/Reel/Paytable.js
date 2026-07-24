@@ -3,17 +3,13 @@ import { Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
 export class Paytable extends Container {
   constructor(symbols) {
     super();
-
     this.visible = false;
     this.eventMode = "static";
-
     // Dark overlay
     const overlay = new Graphics()
       .rect(0, 0, 600, 800)
       .fill({ color: 0x000000, alpha: 0.7 });
-
     overlay.on("pointerdown", () => {});
-
     this.addChild(overlay);
 
     // Main panel
@@ -35,12 +31,9 @@ export class Paytable extends Container {
     });
 
     title.anchor.set(0.5, 0);
-
     title.x = 300;
     title.y = 10;
-
     this.addChild(title);
-
     let y = 130;
 
     symbols.forEach((symbol) => {
@@ -67,13 +60,12 @@ export class Paytable extends Container {
     const rules = new Text({
       text: `⭐ Wild
 Substitutes for every normal symbol.
-
-🎁 Scatter
-3 = 10 Free Spins
-4 = 15 Free Spins
-5 = 20 Free Spins
-
+      🎁 Scatter
+      3 = 10 Free Spins
+      4 = 15 Free Spins
+      5 = 20 Free Spins
 Wins pay LEFT → RIGHT.`,
+
       style: new TextStyle({
         fill: 0xffff99,
         fontSize: 20,

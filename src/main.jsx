@@ -11,7 +11,7 @@ export class SlotFrame extends Graphics {
     // Outer cabinet
     this.roundRect( 0, 0,width,height,30).fill(0x111111).stroke({width: 8,color: 0xffcc00});
     // Inner slot window
-    this.roundRect(25,40,750,420,20).fill(0x000000).stroke({width: 4,color: 0xffffff});
+    // this.roundRect(25,40,750,420,20).fill(0x000000).stroke({width: 4,color: 0xffffff});
     // Bottom control area
     this.roundRect(25,560,550,60,15).fill(0x222222).stroke({width: 3,color: 0xffcc00 });
   }
