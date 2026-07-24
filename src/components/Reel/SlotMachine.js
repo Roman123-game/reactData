@@ -9,6 +9,18 @@ export class SlotMachine extends Container {
     this.credits = 100;
     this.isSpinning = false;
     this.reels = [];
+    this.freeSpins = 0;
+    this.inFreeSpin = false;
+    this.freeSpinText = new Text({
+      text: "",
+      style: new TextStyle({
+        fill: "#FFD700",
+        fontSize: 24,
+        fontWeight: "bold",
+      }),
+    });
+    this.freeSpinText.y = 390;
+    this.addChild(this.freeSpinText);
     this.paylines = [
       // Straight lines
       [0, 0, 0, 0, 0],
@@ -66,7 +78,7 @@ export class SlotMachine extends Container {
   }
   createSpinButton() {
     const button = new Graphics();
-    button.roundRect(0, 0, 200, 60, 15);
+    button.roundRect(0, 2, 200, 56, 15);
     button.fill(0x22aa55);
     button.y = 480;
     button.eventMode = "static";
@@ -75,7 +87,7 @@ export class SlotMachine extends Container {
       text: "SPIN",
       style: {
         fill: "white",
-        fontSize: 30,
+        fontSize: 22,
       },
     });
     text.anchor.set(0.5);
@@ -87,7 +99,7 @@ export class SlotMachine extends Container {
   }
   createPaytableButton() {
     const button = new Graphics();
-    button.roundRect(220, 0, 200, 60, 15);
+    button.roundRect(220, 2, 200, 56, 15);
     button.fill(0x3366cc);
     button.y = 480;
     button.eventMode = "static";
@@ -110,26 +122,76 @@ export class SlotMachine extends Container {
   }
   spin() {
     if (this.isSpinning) return;
-    if (this.credits <= 0) return;
+    // Paid spin or free spin
+    if (this.freeSpins > 0) {
+      this.inFreeSpin = true;
+      this.freeSpins--;
+      this.freeSpinText.text = `FREE SPINS LEFT: ${this.freeSpins}`;
+    } else {
+      this.inFreeSpin = false;
+      if (this.credits <= 0) return;
+      this.credits--;
+      this.freeSpinText.text = "";
+    }
+    this.creditText.text = `Credits: ${this.credits}`;
     this.winLines.clear();
     this.isSpinning = true;
-    this.credits--;
-    this.creditText.text = `Credits: ${this.credits}`;
+    // Start reels
     this.reels.forEach((reel, index) => {
       reel.start();
       setTimeout(
         () => {
           reel.stop();
-          if (index === 4) {
+          // Last reel stopped
+          if (index === this.reels.length - 1) {
             setTimeout(() => {
+              // Check Scatter first (can award/retrigger free spins)
+              this.checkScatters();
+              // Check normal line wins
               this.checkWin();
               this.isSpinning = false;
-            }, 200);
+              // Continue automatically if free spins remain
+              if (this.freeSpins > 0) {
+                this.freeSpinText.text = `FREE SPINS LEFT: ${this.freeSpins}`;
+                setTimeout(() => {
+                  this.spin();
+                }, 1500);
+              } else {
+                this.inFreeSpin = false;
+                this.freeSpinText.text = "";
+              }
+            }, 250);
           }
         },
         1200 + index * 300,
       );
     });
+  }
+  checkScatters() {
+    let scatters = 0;
+    this.reels.forEach((reel) => {
+      reel.currentSymbols.forEach((symbol) => {
+        if (symbol.type === "scatter") {
+          scatters++;
+        }
+      });
+    });
+    let awarded = 0;
+    if (scatters === 3) {
+      awarded = 10;
+    }
+    if (scatters === 4) {
+      awarded = 15;
+    }
+    if (scatters >= 5) {
+      awarded = 20;
+    }
+    if (awarded > 0) {
+      this.freeSpins += awarded;
+      this.freeSpinText.text = `🎉 ${scatters} SCATTERS +${awarded} FREE SPINS`;
+      return true;
+    }
+    return false;
   }
   checkWin() {
     let win = 0;
@@ -150,17 +212,17 @@ export class SlotMachine extends Container {
     }
   }
   checkLine(line) {
-    const first = line[0];
-    let count = 1;
-    for (let i = 1; i < line.length; i++) {
-      if (line[i].name === first.name || line[i].type === "wild") {
+    let base = line.find((s) => s.type !== "wild");
+    if (!base) return 0;
+    let count = 0;
+    for (const symbol of line) {
+      if (symbol.type === "wild" || symbol.name === base.name) {
         count++;
       } else {
         break;
       }
     }
-    if (count < 3) return 0;
-    return first.payout * count;
+    return count >= 3 ? base.payout * count : 0;
   }
   drawWinLine(line) {
     const reelWidth = 120;
@@ -176,11 +238,7 @@ export class SlotMachine extends Container {
     });
     // highlight circles
     for (let i = 0; i < line.length; i++) {
-      this.winLines.circle(
-        i * reelWidth + 60,
-        line[i] * cellHeight + 60,
-        35,
-      );
+      this.winLines.circle(i * reelWidth + 60, line[i] * cellHeight + 60, 35);
       this.winLines.stroke({
         width: 4,
         color: 0xffff00,
