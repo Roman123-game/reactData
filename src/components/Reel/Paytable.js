@@ -18,12 +18,9 @@ export class Paytable extends Container {
 
     // Main panel
     const panel = new Graphics()
-      .roundRect(40, 40, 520, 700, 20)
+      .roundRect(-60, -60, 580, 800, 20)
       .fill(0x222222)
-      .stroke({
-        width: 4,
-        color: 0xffd700,
-      });
+      .stroke({width: 4,color: 0xffd700});
 
     this.addChild(panel);
 
@@ -31,7 +28,7 @@ export class Paytable extends Container {
     const title = new Text({
       text: "PAYTABLE",
       style: new TextStyle({
-        fontSize: 36,
+        fontSize: 28,
         fill: 0xffd700,
         fontWeight: "bold",
       }),
@@ -40,7 +37,7 @@ export class Paytable extends Container {
     title.anchor.set(0.5, 0);
 
     title.x = 300;
-    title.y = 60;
+    title.y = 10;
 
     this.addChild(title);
 
@@ -63,16 +60,16 @@ export class Paytable extends Container {
 5x = ${symbol.payout * 8}`,
         style: new TextStyle({
           fill: "white",
-          fontSize: 22,
+          fontSize: 12,
         }),
       });
 
-      info.x = 145;
-      info.y = y - 5;
+      info.x = 45;
+      info.y = y - 185;
 
       this.addChild(info);
 
-      y += 95;
+      y += 55;
     });
 
     // Rules
@@ -92,8 +89,8 @@ Wins pay LEFT → RIGHT.`,
       }),
     });
 
-    rules.x = 70;
-    rules.y = 560;
+    rules.x = 170;
+    rules.y = 60;
 
     this.addChild(rules);
 
