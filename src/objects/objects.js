@@ -17,8 +17,15 @@ import matic from "../assets/matic.png";
 import cryptoTreasure from "../assets/cryptoTreasure.png";
 import bank from "../assets/bank.png";
 import blockChain from "../assets/blockChain.png";
+import compas from "../assets/compas.png";
 
 export const symbols = [
+    {
+    name: "Compas",
+    texture: compas,
+    payout: 0,
+    type: "normal",
+  },
   {
     name: "blockChain",
     texture: blockChain,
