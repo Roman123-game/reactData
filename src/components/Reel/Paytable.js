@@ -58,10 +58,7 @@ export class Paytable extends Container {
         3x = ${symbol.payout}
         4x = ${symbol.payout * 3}
         5x = ${symbol.payout * 8}`,
-        style: new TextStyle({
-          fill: "white",
-          fontSize: 12,
-        }),
+        style: new TextStyle({fill: "white",fontSize: 12}),
       });
 
       info.x = 45;
