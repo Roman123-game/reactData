@@ -53,8 +53,10 @@ export class Reel extends Container {
 
   update(delta) {
     if (!this.spinning) return;
+    
     this.sprites.forEach((sprite) => {
       sprite.y += this.speed * delta;
+
       if (sprite.y >= this.symbolHeight * this.rows) {
         sprite.y -= this.symbolHeight * this.rows;
         const symbol = this.randomSymbol();
