@@ -114,7 +114,7 @@ export const symbols = [
     name: "Jackpot",
     texture: jackpot,
     payout: 15,
-    type: "normal",
+    type: "scatter",
   },
   {
     name: "Vault",
