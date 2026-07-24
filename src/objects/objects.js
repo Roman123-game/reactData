@@ -41,7 +41,7 @@ export const symbols = [
   {
     name: "cryptoTreasure",
     texture: cryptoTreasure,
-    payout:2,
+    payout:1,
     type: "normal",
   },
   {
@@ -59,7 +59,7 @@ export const symbols = [
   {
     name: "Hrp",
     texture: hrp,
-    payout: 3,
+    payout: 1,
     type: "normal",
   },
   {
