@@ -13,7 +13,7 @@ export class SlotFrame extends Graphics {
     // Inner slot window
     // this.roundRect(25,40,750,420,20).fill(0x000000).stroke({width: 4,color: 0xffffff});
     // Bottom control area
-    this.roundRect(25,560,550,60,15).fill(0x222222).stroke({width: 3,color: 0xffcc00 });
+    this.roundRect(25,560,700,60,15).fill(0x222222).stroke({width: 3,color: 0xffcc00 });
   }
 }
 

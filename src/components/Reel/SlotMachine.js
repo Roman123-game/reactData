@@ -11,6 +11,8 @@ export class SlotMachine extends Container {
     this.reels = [];
     this.freeSpins = 0;
     this.inFreeSpin = false;
+    this.autoSpin = false;
+    this.autoSpinCount = 0;
     this.freeSpinText = new Text({
       text: "",
       style: new TextStyle({
@@ -67,6 +69,7 @@ export class SlotMachine extends Container {
     this.addChild(this.creditText);
     this.createSpinButton();
     this.createPaytableButton();
+    this.createAutoSpinButton();
     this.paytable = new Paytable(symbols);
     this.addChild(this.paytable);
     // Update reels
@@ -75,6 +78,49 @@ export class SlotMachine extends Container {
         reel.update(ticker.deltaTime);
       });
     });
+  }
+  createAutoSpinButton() {
+    const button = new Graphics();
+
+    button.roundRect(440, 2, 140, 56, 15);
+    button.fill(0xaa3333);
+
+    button.y = 480;
+
+    button.eventMode = "static";
+    button.cursor = "pointer";
+
+    const text = new Text({
+      text: "Auto",
+      style: {
+        fill: "white",
+        fontSize: 22,
+      },
+    });
+
+    text.anchor.set(0.5);
+    text.x = 510;
+    text.y = 30;
+
+    button.addChild(text);
+
+    button.on("pointerdown", () => {
+      this.autoSpin = !this.autoSpin;
+
+      if (this.autoSpin) {
+        this.autoSpinCount = 50;
+
+        text.text = "STOP";
+
+        this.spin();
+      } else {
+        this.autoSpinCount = 0;
+
+        text.text = "AUTO";
+      }
+    });
+
+    this.addChild(button);
   }
   createSpinButton() {
     const button = new Graphics();
@@ -122,42 +168,81 @@ export class SlotMachine extends Container {
   }
   spin() {
     if (this.isSpinning) return;
-    // Paid spin or free spin
+
+    // Stop auto spin when limit reached
+    if (this.autoSpin && this.autoSpinCount <= 0) {
+      this.autoSpin = false;
+      return;
+    }
+
+    // FREE SPIN
     if (this.freeSpins > 0) {
       this.inFreeSpin = true;
+
       this.freeSpins--;
+
       this.freeSpinText.text = `FREE SPINS LEFT: ${this.freeSpins}`;
-    } else {
+    }
+    // NORMAL SPIN
+    else {
       this.inFreeSpin = false;
-      if (this.credits <= 0) return;
+
+      if (this.credits <= 0) {
+        this.autoSpin = false;
+
+        return;
+      }
+
       this.credits--;
+
       this.freeSpinText.text = "";
     }
+
+    // Count auto spins only for paid spins
+    if (this.autoSpin && !this.inFreeSpin) {
+      this.autoSpinCount--;
+    }
+
     this.creditText.text = `Credits: ${this.credits}`;
+
     this.winLines.clear();
+
     this.isSpinning = true;
+
     // Start reels
     this.reels.forEach((reel, index) => {
       reel.start();
+
       setTimeout(
         () => {
           reel.stop();
-          // Last reel stopped
+
+          // Last reel finished
           if (index === this.reels.length - 1) {
             setTimeout(() => {
-              // Check Scatter first (can award/retrigger free spins)
-              this.checkScatters();
-              // Check normal line wins
+              // Check wins
               this.checkWin();
+
+              // Check scatter bonus
+              this.checkScatters();
+
               this.isSpinning = false;
-              // Continue automatically if free spins remain
-              if (this.freeSpins > 0) {
-                this.freeSpinText.text = `FREE SPINS LEFT: ${this.freeSpins}`;
+
+              // Continue free spins or auto spin
+              if (
+                this.freeSpins > 0 ||
+                (this.autoSpin && this.autoSpinCount > 0)
+              ) {
                 setTimeout(() => {
                   this.spin();
                 }, 1500);
               } else {
                 this.inFreeSpin = false;
+
+                if (this.autoSpin) {
+                  this.autoSpin = false;
+                }
+
                 this.freeSpinText.text = "";
               }
             }, 250);
