@@ -41,31 +41,31 @@ export const symbols = [
   {
     name: "cryptoTreasure",
     texture: cryptoTreasure,
-    payout:1,
+    payout:2,
     type: "normal",
   },
   {
     name: "Matic",
     texture: matic,
-    payout: 1,
+    payout: 2,
     type: "normal",
   },
   {
     name: "Crypto",
     texture: crypto,
-    payout: 1,
+    payout: 2,
     type: "normal",
   },
   {
     name: "Hrp",
     texture: hrp,
-    payout: 1,
+    payout: 3,
     type: "normal",
   },
   {
     name: "Bitcoin",
     texture: bitcoin,
-    payout: 2,
+    payout: 3,
     type: "normal",
   },
   {
