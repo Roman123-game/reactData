@@ -29,11 +29,9 @@ export class SlotMachine extends Container {
     frame.rect(-10, -10, 620, 380);
     frame.stroke({ width: 5, color: 0xffd700 });
     this.addChildAt(frame, 0);
-
-    this.creditText = new Text({
-      text: `Credits: ${this.credits}`,
-      style: new TextStyle({ fill: "white", fontSize: 28 }),
-    });
+    this.creditText = new Text({text: `Credits: ${this.credits}`,
+           style: new TextStyle({ fill: "white", fontSize: 28 })});
+           
     this.creditText.y = 420;
     this.addChild(this.creditText);
     this.createSpinButton();
@@ -53,12 +51,7 @@ export class SlotMachine extends Container {
     button.y = 480;
     button.eventMode = "static";
     button.cursor = "pointer";
-    const text = new Text({
-      text: "SPIN",
-      style: {
-        fill: "white",
-        fontSize: 30,
-      },
+    const text = new Text({text: "SPIN",style: { fill: "white",fontSize: 30},
     });
     text.anchor.set(0.5);
     text.x = 100;
@@ -75,24 +68,14 @@ export class SlotMachine extends Container {
     button.y = 480;
     button.eventMode = "static";
     button.cursor = "pointer";
-
-    const text = new Text({
-      text: "PAYTABLE",
-
-      style: {
-        fill: "white",
-        fontSize: 22,
-      },
+    const text = new Text({text: "PAYTABLE",style: {fill: "white",fontSize: 22},
     });
 
     text.anchor.set(0.5);
     text.x = 320;
     text.y = 30;
     button.addChild(text);
-    button.on("pointerdown", () => {
-      this.paytable.toggle();
-    });
-
+    button.on("pointerdown", () => {this.paytable.toggle()});
     this.addChild(button);
   }
 
@@ -102,9 +85,7 @@ export class SlotMachine extends Container {
     this.isSpinning = true;
     this.credits--;
     this.creditText.text = `Credits: ${this.credits}`;
-    this.reels.forEach((reel, index) => {
-      reel.start();
-
+    this.reels.forEach((reel, index) => {reel.start();
       setTimeout(() => {reel.stop();
           if (index === 4) {
             this.checkWin();
@@ -119,9 +100,7 @@ export class SlotMachine extends Container {
   checkWin() {
     let win = 0;
     for (const line of this.paylines) {
-      const symbols = line.map(
-        (row, index) => this.reels[index].currentSymbols[row],
-      );
+      const symbols = line.map((row, index) => this.reels[index].currentSymbols[row]);
       win += this.checkLine(symbols);
     }
     if (win > 0) {
@@ -137,7 +116,6 @@ export class SlotMachine extends Container {
       if (line[i].name === first.name || line[i].type === "wild") count++;
       else break;
     }
-
     if (count < 3) return 0;
     return first.payout * count;
   }
