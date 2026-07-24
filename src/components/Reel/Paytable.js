@@ -1,34 +1,22 @@
 import { Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
-
 export class Paytable extends Container {
-
   constructor(symbols) {
-
     super();
-
     this.visible = false;
     this.eventMode = "static";
-
-
     // =========================
     // Dark overlay
     // =========================
-
     const overlay = new Graphics()
       .rect(0, 0, 600, 800)
       .fill({
         color: 0x000000,
         alpha: 0.75
       });
-
     this.addChild(overlay);
-
-
-
     // =========================
     // Main panel
     // =========================
-
     const panel = new Graphics()
       .roundRect(40, 40, 520, 720, 20)
       .fill(0x222222)
@@ -36,44 +24,25 @@ export class Paytable extends Container {
         width: 4,
         color: 0xffd700
       });
-
     this.addChild(panel);
-
-
-
     // =========================
     // Title
     // =========================
-
     const title = new Text({
-
       text: "PAYTABLE",
-
       style: new TextStyle({
-
         fill: 0xffd700,
         fontSize: 22,
         fontWeight: "bold"
-
       })
-
     });
-
-
     title.anchor.set(0.5);
-
     title.x = 300;
     title.y = 80;
-
     this.addChild(title);
-
-
-
-
     // =========================
     // Symbols - TWO COLUMNS
     // =========================
-
     const positions = [
       {
         x: 100,
@@ -84,36 +53,23 @@ export class Paytable extends Container {
         y: 20
       }
     ];
-
-
     symbols.forEach((symbol,index)=>{
-
-
       const column = index % 2;
       const row = Math.floor(index / 2);
-
-
       const x = positions[column].x ;
       const y = positions[column].y + row * 60;
-
-
-
       // =====================
       // IMAGE
       // =====================
-
       const image = new Sprite(symbol.texture);
       image.width = 65;
       image.height = 65;
       image.x = x;
       image.y = y;
       this.addChild(image);
-
-
       // =====================
       // NAME
       // =====================
-
       const name = new Text({
         text: symbol.name.toUpperCase(),
         style: new TextStyle({
@@ -126,15 +82,9 @@ export class Paytable extends Container {
       name.x = x + 32;
       name.y = y + 70;
       this.addChild(name);
-
-
-
-
-
       // =====================
       // PAYOUTS
       // =====================
-
       const payout = new Text({
         text:
 `3X   ${symbol.payout}
@@ -145,14 +95,11 @@ export class Paytable extends Container {
           fontSize: 14,
           lineHeight: 15
         })
-
       });
       payout.x = x;
       payout.y = y + 80;
       this.addChild(payout);
-
     });
-
     const rules = new Text({
       text:
 `⭐ WILD
@@ -168,19 +115,12 @@ WINS PAY LEFT → RIGHT`,
         lineHeight: 22
       })
     });
-
     rules.x = 200;
     rules.y = 460;
     this.addChild(rules);
-
-
-
-
-
     // =========================
     // Close Button
     // =========================
-
     const close = new Graphics()
       .roundRect(0,0,170,55,12)
       .fill(0xaa2222);
@@ -196,7 +136,6 @@ WINS PAY LEFT → RIGHT`,
         fontWeight:"bold"
       })
     });
-
     closeText.anchor.set(0.5);
     closeText.x = 85;
     closeText.y = 27;
