@@ -49,56 +49,17 @@ this.paylines = [
 // Create reels
 
 for(let i=0;i<5;i++){
-
-
-    const reel =
-        new Reel(symbols);
-
-
-    reel.x =
-        i * 120;
-
-
+    const reel =new Reel(symbols);
+    reel.x =i * 120;
     this.addChild(reel);
-
-
     this.reels.push(reel);
-
 }
 
-
-
-
-
-this.x =
-(app.screen.width - 600) / 2;
-
-
+this.x =(app.screen.width - 600) / 2;
 this.y = 80;
-
-
-
-
-
-// Frame
-
 const frame = new Graphics();
-
-
-frame.rect(
-    -10,
-    -10,
-    620,
-    380
-);
-
-
-frame.stroke({
-    width:5,
-    color:0xffd700
-});
-
-
+frame.rect(-10,-10,620,380);
+frame.stroke({width:5,color:0xffd700});
 this.addChildAt(frame,0);
 
 

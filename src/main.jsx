@@ -109,7 +109,7 @@ async function init() {
   await app.init({
     width: 800,
     height: 800,
-    background: 0x222222,
+    background: 0x19191A,
   });
 
   document.getElementById("root").appendChild(app.canvas);
