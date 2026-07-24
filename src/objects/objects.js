@@ -10,11 +10,32 @@ import jackpot from "../assets/jackpot.png";
 import vault from "../assets/vault.png";
 import gain from "../assets/gain.png";
 import wild from "../assets/wild.png";
-import shiledtwo from "../assets/shiledtwo.png"; 
-import hrp from "../assets/hrp.png"; 
- 
- export const symbols = [
+import shiledtwo from "../assets/shiledtwo.png";
+import hrp from "../assets/hrp.png";
+import crypto from "../assets/crypto.png";
+import matic from "../assets/matic.png";
+import cryptoTreasure from "../assets/cryptoTreasure.png";
+
+export const symbols = [
+      {
+    name: "cryptoTreasure",
+    texture: cryptoTreasure,
+    payout: 0,
+    type: "normal",
+  },
     {
+    name: "Matic",
+    texture: matic,
+    payout: 0,
+    type: "normal",
+  },
+  {
+    name: "Crypto",
+    texture: crypto,
+    payout: 0,
+    type: "normal",
+  },
+  {
     name: "Hrp",
     texture: hrp,
     payout: 0,
