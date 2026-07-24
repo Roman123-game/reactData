@@ -45,14 +45,11 @@ export class Paytable extends Container {
 
     symbols.forEach((symbol) => {
       const sprite = new Sprite(symbol.texture);
-
       sprite.width = 55;
       sprite.height = 55;
       sprite.x = 70;
       sprite.y = y;
-
       this.addChild(sprite);
-
       const info = new Text({
         text: `${symbol.name}
         3x = ${symbol.payout}
@@ -60,12 +57,9 @@ export class Paytable extends Container {
         5x = ${symbol.payout * 8}`,
         style: new TextStyle({fill: "white",fontSize: 12}),
       });
-
       info.x = 45;
       info.y = y - 185;
-
       this.addChild(info);
-
       y += 55;
     });
 
