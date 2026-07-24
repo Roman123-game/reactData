@@ -5,6 +5,7 @@ export class Reel extends Container {
     this.symbols = [];
     this.speed = 0;
     this.spinning = false;
+
     for (let i = 0; i < 4; i++) {
       const texture = Texture.from(
         symbols[Math.floor(Math.random() * symbols.length)],
@@ -20,8 +21,10 @@ export class Reel extends Container {
   }
   update(delta) {
     if (!this.spinning) return;
+
     this.symbols.forEach((sprite) => {
       sprite.y += this.speed * delta;
+      
       if (sprite.y >= 480) {
         sprite.y -= 480;
         sprite.texture = Texture.from(
