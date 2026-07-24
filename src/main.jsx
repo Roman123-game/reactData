@@ -2,12 +2,6 @@ import { Application, Assets } from "pixi.js";
 import { Graphics } from "pixi.js";
 import { SlotMachine } from "./components/Reel/SlotMachine";
 import  {symbols } from "./objects/objects";
-// import cherry from "./assets/cherry.png";
-// import lemon from "./assets/lemon.png";
-// import bell from "./assets/bell.png";
-// import seven from "./assets/seven.png";
-// import diamond from "./assets/diamond.png";
-
 
 export class SlotFrame extends Graphics {
   constructor() {
@@ -23,10 +17,7 @@ export class SlotFrame extends Graphics {
   }
 }
 
-
-
 const app = new Application();
-
 async function init() {
   await app.init({
     width: 800,
@@ -34,17 +25,13 @@ async function init() {
     background: 0x19191a,
   });
 
-  
   document.getElementById("root").appendChild(app.canvas);
   await Assets.load(symbols.map((symbol) => symbol.texture));
   const slotMachine = new SlotMachine(app, symbols);
-    const frame = new SlotFrame();
-
-frame.x = 0;
-frame.y = 0;
-app.stage.addChild(frame);
+  const frame = new SlotFrame();
+  frame.x = 0;frame.y = 0;
+  app.stage.addChild(frame);
   app.stage.addChild(slotMachine);
-
 }
 
 init();
