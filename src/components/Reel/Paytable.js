@@ -1,114 +1,208 @@
 import { Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
 
 export class Paytable extends Container {
+
   constructor(symbols) {
+
     super();
+
     this.visible = false;
     this.eventMode = "static";
+
+
+    // =========================
     // Dark overlay
+    // =========================
+
     const overlay = new Graphics()
       .rect(0, 0, 600, 800)
-      .fill({ color: 0x000000, alpha: 0.7 });
-    overlay.on("pointerdown", () => {});
+      .fill({
+        color: 0x000000,
+        alpha: 0.75
+      });
+
     this.addChild(overlay);
 
+
+
+    // =========================
     // Main panel
+    // =========================
+
     const panel = new Graphics()
-      .roundRect(-60, -60, 580, 800, 20)
+      .roundRect(40, 40, 520, 720, 20)
       .fill(0x222222)
-      .stroke({width: 4,color: 0xffd700});
+      .stroke({
+        width: 4,
+        color: 0xffd700
+      });
 
     this.addChild(panel);
 
+
+
+    // =========================
     // Title
+    // =========================
+
     const title = new Text({
+
       text: "PAYTABLE",
+
       style: new TextStyle({
-        fontSize: 28,
+
         fill: 0xffd700,
-        fontWeight: "bold",
-      }),
+        fontSize: 22,
+        fontWeight: "bold"
+
+      })
+
     });
 
-    title.anchor.set(0.5, 0);
+
+    title.anchor.set(0.5);
+
     title.x = 300;
-    title.y = 10;
-    this.addChild(title);
-    let y = 130;
+    title.y = 80;
 
-    symbols.forEach((symbol) => {
-      const sprite = new Sprite(symbol.texture);
-      sprite.width = 55;
-      sprite.height = 55;
-      sprite.x = 70;
-      sprite.y = y;
-      this.addChild(sprite);
-      const info = new Text({
-        text: `${symbol.name}
-        3x = ${symbol.payout}
-        4x = ${symbol.payout * 3}
-        5x = ${symbol.payout * 8}`,
-        style: new TextStyle({fill: "white",fontSize: 12}),
+    this.addChild(title);
+
+
+
+
+    // =========================
+    // Symbols - TWO COLUMNS
+    // =========================
+
+    const positions = [
+      {
+        x: 100,
+        y: 20
+      },
+      {
+        x: 430,
+        y: 20
+      }
+    ];
+
+
+    symbols.forEach((symbol,index)=>{
+
+
+      const column = index % 2;
+      const row = Math.floor(index / 2);
+
+
+      const x = positions[column].x ;
+      const y = positions[column].y + row * 60;
+
+
+
+      // =====================
+      // IMAGE
+      // =====================
+
+      const image = new Sprite(symbol.texture);
+      image.width = 65;
+      image.height = 65;
+      image.x = x;
+      image.y = y;
+      this.addChild(image);
+
+
+      // =====================
+      // NAME
+      // =====================
+
+      const name = new Text({
+        text: symbol.name.toUpperCase(),
+        style: new TextStyle({
+          fill: 0xffffff,
+          fontSize: 12,
+          fontWeight: "bold"
+        })
       });
-      info.x = 45;
-      info.y = y - 185;
-      this.addChild(info);
-      y += 55;
+      name.anchor.set(0.5,0);
+      name.x = x + 32;
+      name.y = y + 70;
+      this.addChild(name);
+
+
+
+
+
+      // =====================
+      // PAYOUTS
+      // =====================
+
+      const payout = new Text({
+        text:
+`3X   ${symbol.payout}
+4X   ${symbol.payout * 3}
+5X   ${symbol.payout * 8}`,
+        style: new TextStyle({
+          fill: 0xffffff,
+          fontSize: 14,
+          lineHeight: 15
+        })
+
+      });
+      payout.x = x;
+      payout.y = y + 80;
+      this.addChild(payout);
+
     });
 
-    // Rules
     const rules = new Text({
-      text: `⭐ Wild
-Substitutes for every normal symbol.
-      🎁 Scatter
-      3 = 10 Free Spins
-      4 = 15 Free Spins
-      5 = 20 Free Spins
-Wins pay LEFT → RIGHT.`,
-
+      text:
+`⭐ WILD
+Substitutes normal symbols
+🎁 SCATTER
+3 = 10 FREE SPINS
+4 = 15 FREE SPINS
+5 = 20 FREE SPINS
+WINS PAY LEFT → RIGHT`,
       style: new TextStyle({
         fill: 0xffff99,
-        fontSize: 20,
-      }),
+        fontSize: 15,
+        lineHeight: 22
+      })
     });
 
-    rules.x = 170;
-    rules.y = 60;
-
+    rules.x = 200;
+    rules.y = 460;
     this.addChild(rules);
 
-    // Close button
-    const close = new Graphics().roundRect(0, 0, 170, 55, 12).fill(0xaa2222);
 
+
+
+
+    // =========================
+    // Close Button
+    // =========================
+
+    const close = new Graphics()
+      .roundRect(0,0,170,55,12)
+      .fill(0xaa2222);
     close.x = 215;
-    close.y = 665;
-
+    close.y = 650;
     close.eventMode = "static";
     close.cursor = "pointer";
-
     const closeText = new Text({
-      text: "CLOSE",
-      style: {
-        fill: "white",
-        fontSize: 24,
-      },
+      text:"CLOSE",
+      style:new TextStyle({
+        fill:"white",
+        fontSize:24,
+        fontWeight:"bold"
+      })
     });
 
     closeText.anchor.set(0.5);
-
     closeText.x = 85;
     closeText.y = 27;
-
     close.addChild(closeText);
-
-    close.on("pointerdown", () => {
-      this.visible = false;
-    });
-
+    close.on("pointerdown",()=>{this.visible = false});
     this.addChild(close);
   }
-
-  toggle() {
-    this.visible = !this.visible;
-  }
+  toggle(){ this.visible = !this.visible};
 }
