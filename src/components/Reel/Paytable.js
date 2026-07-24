@@ -1,10 +1,4 @@
-import {
-  Container,
-  Graphics,
-  Sprite,
-  Text,
-  TextStyle,
-} from "pixi.js";
+import { Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
 
 export class Paytable extends Container {
   constructor(symbols) {
@@ -63,8 +57,7 @@ export class Paytable extends Container {
       this.addChild(sprite);
 
       const info = new Text({
-        text:
-`${symbol.name}
+        text: `${symbol.name}
 3x = ${symbol.payout}
 4x = ${symbol.payout * 3}
 5x = ${symbol.payout * 8}`,
@@ -84,8 +77,7 @@ export class Paytable extends Container {
 
     // Rules
     const rules = new Text({
-      text:
-`⭐ Wild
+      text: `⭐ Wild
 Substitutes for every normal symbol.
 
 🎁 Scatter
@@ -106,9 +98,7 @@ Wins pay LEFT → RIGHT.`,
     this.addChild(rules);
 
     // Close button
-    const close = new Graphics()
-      .roundRect(0, 0, 170, 55, 12)
-      .fill(0xaa2222);
+    const close = new Graphics().roundRect(0, 0, 170, 55, 12).fill(0xaa2222);
 
     close.x = 215;
     close.y = 665;

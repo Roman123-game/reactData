@@ -21,7 +21,6 @@ import gain from "./assets/gain.png";
 import wild from "./assets/wild.png";
 import shiledtwo from "./assets/shiledtwo.png";
 
-
 const symbols = [
   {
     name: "Bitcoin",
@@ -109,7 +108,7 @@ async function init() {
   await app.init({
     width: 800,
     height: 800,
-    background: 0x19191A,
+    background: 0x19191a,
   });
 
   document.getElementById("root").appendChild(app.canvas);
@@ -117,11 +116,11 @@ async function init() {
   // const symbols = [bitcoin, litherium, tetherium, shield, safe, rocket, dog, jackpot, vault,gain,etherium,wild,shiledtwo];
 
   // Load images into Pixi cache
-await Assets.load(symbols.map(symbol => symbol.texture));
+  await Assets.load(symbols.map((symbol) => symbol.texture));
 
   const slotMachine = new SlotMachine(app, symbols);
 
-app.stage.addChild(slotMachine);
+  app.stage.addChild(slotMachine);
 }
 
 init();
