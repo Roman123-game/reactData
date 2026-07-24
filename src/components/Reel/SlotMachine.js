@@ -165,9 +165,9 @@ export class SlotMachine extends Container {
   drawWinLine(line) {
     const reelWidth = 120;
     const cellHeight = 120;
-    this.winLines.moveTo(45, line[0] * cellHeight + 45);
+    this.winLines.moveTo(45, line[0] * cellHeight + 60);
     for (let i = 1; i < line.length; i++) {
-      this.winLines.lineTo(i * reelWidth + 45, line[i] * cellHeight + 45);
+      this.winLines.lineTo(i * reelWidth + 60, line[i] * cellHeight + 60);
     }
     this.winLines.stroke({
       width: 8,
@@ -177,8 +177,8 @@ export class SlotMachine extends Container {
     // highlight circles
     for (let i = 0; i < line.length; i++) {
       this.winLines.circle(
-        i * reelWidth + 45,
-        line[i] * cellHeight + 45,
+        i * reelWidth + 60,
+        line[i] * cellHeight + 60,
         35,
       );
       this.winLines.stroke({
