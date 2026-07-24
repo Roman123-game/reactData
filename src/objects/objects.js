@@ -15,15 +15,29 @@ import hrp from "../assets/hrp.png";
 import crypto from "../assets/crypto.png";
 import matic from "../assets/matic.png";
 import cryptoTreasure from "../assets/cryptoTreasure.png";
+import bank from "../assets/bank.png";
+import blockChain from "../assets/blockChain.png";
 
 export const symbols = [
-      {
+  {
+    name: "blockChain",
+    texture: blockChain,
+    payout: 0,
+    type: "normal",
+  },
+  {
+    name: "bank",
+    texture: bank,
+    payout: 0,
+    type: "normal",
+  },
+  {
     name: "cryptoTreasure",
     texture: cryptoTreasure,
     payout: 0,
     type: "normal",
   },
-    {
+  {
     name: "Matic",
     texture: matic,
     payout: 0,
