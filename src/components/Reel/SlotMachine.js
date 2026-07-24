@@ -1,412 +1,474 @@
-import { Container, Graphics, Text, TextStyle } from "pixi.js";
-import { Paytable } from "./Paytable";
+import {
+    Container,
+    Graphics,
+    Text,
+    TextStyle
+}
+from "pixi.js";
+
 import { Reel } from "./Reel";
+import { Paytable } from "./Paytable";
+
 
 
 export class SlotMachine extends Container {
 
-    constructor(app, symbols) {
 
-        super();
+constructor(app, symbols){
 
-        this.app = app;
+super();
 
-        this.symbols = symbols;
 
-        this.credits = 100;
+this.app = app;
 
-        this.freeSpins = 0;
+this.symbols = symbols;
 
-        this.isSpinning = false;
 
+this.credits = 100;
 
-        this.reels = [];
+this.isSpinning = false;
 
 
-        this.paylines = [
+this.reels = [];
 
-            [0,0,0,0,0],
-            [1,1,1,1,1],
-            [2,2,2,2,2],
 
-            [0,1,2,1,0],
-            [2,1,0,1,2],
 
-            [1,0,0,0,1],
-            [1,2,2,2,1],
+this.paylines = [
 
-        ];
+    [0,0,0,0,0],
 
+    [1,1,1,1,1],
 
+    [2,2,2,2,2],
 
-        for(let i=0;i<5;i++){
+];
 
-            const reel = new Reel(symbols);
 
-            reel.x = i * 120;
 
-            this.addChild(reel);
 
-            this.reels.push(reel);
+// Create reels
 
-        }
+for(let i=0;i<5;i++){
 
 
+    const reel =
+        new Reel(symbols);
 
-        this.x = app.screen.width / 2 - 300;
-        this.y = 80;
 
+    reel.x =
+        i * 120;
 
 
-        this.creditText = new Text({
+    this.addChild(reel);
 
-            text:`Credits: ${this.credits}`,
 
-            style:new TextStyle({
+    this.reels.push(reel);
 
-                fill:"white",
-                fontSize:28
+}
 
-            })
 
-        });
 
 
-        this.creditText.y = 520;
 
-        this.addChild(this.creditText);
+this.x =
+(app.screen.width - 600) / 2;
 
 
+this.y = 80;
 
-        this.freeSpinText = new Text({
 
-            text:"",
 
-            style:{
-                fill:"#ffd700",
-                fontSize:24
-            }
 
-        });
 
+// Frame
 
-        this.freeSpinText.y = 550;
+const frame = new Graphics();
 
-        this.addChild(this.freeSpinText);
 
+frame.rect(
+    -10,
+    -10,
+    620,
+    380
+);
 
 
-        this.createSpinButton();
+frame.stroke({
+    width:5,
+    color:0xffd700
+});
 
-        this.createPaytableButton();
 
+this.addChildAt(frame,0);
 
 
-        this.paytable = new Paytable(symbols);
 
-        this.addChild(this.paytable);
 
 
 
-        app.ticker.add((ticker)=>{
+this.creditText =
+new Text({
 
-            this.reels.forEach(reel=>{
+text:`Credits: ${this.credits}`,
 
-                reel.update(ticker.deltaTime);
+style:new TextStyle({
 
-            });
+fill:"white",
 
-        });
+fontSize:28
 
-    }
+})
 
+});
 
 
+this.creditText.y = 420;
 
-    createSpinButton(){
 
-        const button = new Graphics();
+this.addChild(this.creditText);
 
-        button.roundRect(0,0,200,60,15);
 
-        button.fill(0x22aa55);
 
 
-        button.y = 600;
 
+this.createSpinButton();
 
-        button.eventMode="static";
+this.createPaytableButton();
 
-        button.cursor="pointer";
 
 
+this.paytable =
+new Paytable(symbols);
 
-        const text = new Text({
 
-            text:"SPIN",
+this.addChild(this.paytable);
 
-            style:{
-                fill:"white",
-                fontSize:30
-            }
 
-        });
 
 
-        text.anchor.set(.5);
 
-        text.x=100;
+app.ticker.add(
+ticker=>{
 
-        text.y=30;
+this.reels.forEach(
+reel=>reel.update(
+ticker.deltaTime
+));
 
+});
 
-        button.addChild(text);
+}
 
 
 
-        button.on("pointerdown",()=>{
 
-            this.spin();
+createSpinButton(){
 
-        });
 
+const button =
+new Graphics();
 
 
-        this.addChild(button);
+button.roundRect(
+0,
+0,
+200,
+60,
+15
+);
 
-    }
 
+button.fill(
+0x22aa55
+);
 
 
 
-    createPaytableButton(){
+button.y=480;
 
 
-        const button = new Graphics();
 
+button.eventMode="static";
 
-        button.roundRect(0,0,200,60,15);
+button.cursor="pointer";
 
-        button.fill(0x3366cc);
 
 
-        button.x=220;
+const text =
+new Text({
 
-        button.y=600;
+text:"SPIN",
 
+style:{
+fill:"white",
+fontSize:30
+}
 
-        button.eventMode="static";
+});
 
-        button.cursor="pointer";
 
+text.anchor.set(.5);
 
 
-        const text = new Text({
+text.x=100;
 
-            text:"PAYTABLE",
+text.y=30;
 
-            style:{
-                fill:"white",
-                fontSize:24
-            }
 
-        });
 
+button.addChild(text);
 
-        text.anchor.set(.5);
 
-        text.x=100;
 
-        text.y=30;
+button.on(
+"pointerdown",
+()=>this.spin()
+);
 
 
 
-        button.addChild(text);
+this.addChild(button);
 
 
+}
 
-        button.on("pointerdown",()=>{
 
-            this.paytable.toggle();
 
-        });
 
+createPaytableButton(){
 
 
-        this.addChild(button);
+const button =
+new Graphics();
 
 
-    }
 
+button.roundRect(
+220,
+0,
+200,
+60,
+15
+);
 
 
 
-    spin(){
+button.fill(
+0x3366cc
+);
 
 
-        if(this.isSpinning)
-            return;
 
+button.y=480;
 
-        if(this.credits<=0 && this.freeSpins<=0)
-            return;
 
 
+button.eventMode="static";
 
-        this.isSpinning=true;
+button.cursor="pointer";
 
 
 
-        if(this.freeSpins>0){
+const text =
+new Text({
 
-            this.freeSpins--;
+text:"PAYTABLE",
 
-        }
-        else{
+style:{
+fill:"white",
+fontSize:22
+}
 
-            this.credits--;
+});
 
-        }
 
+text.anchor.set(.5);
 
 
-        this.updateText();
+text.x=320;
 
+text.y=30;
 
 
-        this.reels.forEach((reel,index)=>{
 
+button.addChild(text);
 
-            reel.start();
 
 
+button.on(
+"pointerdown",
+()=>{
+this.paytable.toggle();
+}
+);
 
-            setTimeout(()=>{
 
 
-                reel.stop();
+this.addChild(button);
 
 
-                if(index===4){
+}
 
 
-                    this.generateResults();
 
-                    this.checkWin();
 
 
-                    this.isSpinning=false;
 
+spin(){
 
-                }
 
+if(this.isSpinning)
+return;
 
-            },1200 + index*400);
 
+if(this.credits<=0)
+return;
 
 
-        });
-    }
 
-    generateResults(){
-        this.reels.forEach(reel=>{
-            reel.currentSymbols=[];
-            reel.sprites.forEach(sprite=>{
-                const symbol = this.symbols[
-                    Math.floor(
-                        Math.random()*this.symbols.length
-                    )
-                ];
-                reel.currentSymbols.push(symbol);
-            });
-        });
-    }
+this.isSpinning=true;
 
-    checkWin(){
-        let total=0;
-        for(const payline of this.paylines){
-            const line = payline.map(
-                (row,index)=>
-                    this.reels[index]
-                    .currentSymbols[row]
-            );
-            total += this.checkPayline(line);
-        }
-        if(total>0){
-            this.credits+=total;
-            this.creditText.text =
-            `🎉 WIN +${total} Credits:${this.credits}`;
-        }
-        else{
-            this.updateText();
-        }
-        this.checkScatter();
-    }
 
-    checkPayline(line){
-        let base=null;
-        let count=0;
+this.credits--;
 
-        for(const symbol of line){
-            if(symbol.type==="scatter")
-                break;
-            if(!base && symbol.type!=="wild"){
-                base=symbol;
-            }
-            if(
-                symbol.type==="wild" ||
-                symbol.name===base?.name
-            ){
-                count++;
-            }
-            else{
-                break;
-            }
-        }
 
-        if(count<3)
-            return 0;
+this.creditText.text =
+`Credits: ${this.credits}`;
 
-        if(!base)
-            return 500;
 
-        if(count===3)
-            return base.payout;
 
-        if(count===4)
-            return base.payout*3;
 
-        if(count===5)
-            return base.payout*8;
-        return 0;
-    }
 
-    checkScatter(){
-        let count=0;
-        this.reels.forEach(reel=>{
-            reel.currentSymbols.forEach(symbol=>{
-                if(symbol.type==="scatter")
-                    count++;
-            });
-        });
+this.reels.forEach(
+(reel,index)=>{
 
-        if(count>=3){
-            const spins =
-                count===3?10:
-                count===4?15:
-                20;
-            this.freeSpins+=spins;
-            this.updateText();
-        }
-    }
 
-    updateText(){
-        this.creditText.text =
-        `Credits: ${this.credits}`;
-        this.freeSpinText.text =
-        this.freeSpins>0?
-        `Free Spins: ${this.freeSpins}`:
-        "";
-    }
+reel.start();
+
+
+
+setTimeout(()=>{
+
+
+reel.stop();
+
+
+
+if(index===4){
+
+
+this.checkWin();
+
+
+this.isSpinning=false;
+
+
+}
+
+
+
+},
+1200 + index*300);
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+checkWin(){
+
+
+let win=0;
+
+
+
+for(const line of this.paylines){
+
+
+const symbols =
+line.map(
+(row,index)=>
+this.reels[index]
+.currentSymbols[row]
+);
+
+
+
+win +=
+this.checkLine(symbols);
+
+
+}
+
+
+
+
+if(win>0){
+
+
+this.credits += win;
+
+
+this.creditText.text =
+`WIN +${win} Credits:${this.credits}`;
+
+
+}
+
+
+}
+
+
+
+
+checkLine(line){
+
+
+const first =
+line[0];
+
+
+let count=1;
+
+
+
+for(let i=1;i<line.length;i++){
+
+
+if(
+line[i].name === first.name ||
+line[i].type==="wild"
+)
+
+count++;
+
+
+else
+
+break;
+
+
+}
+
+
+
+if(count<3)
+return 0;
+
+
+
+return first.payout * count;
+
+
+}
+
+
 
 }

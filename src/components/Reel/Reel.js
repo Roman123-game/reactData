@@ -1,61 +1,191 @@
-import { Container, Sprite, Assets } from "pixi.js";
+import { Container, Sprite, Texture, Graphics } from "pixi.js";
 
 export class Reel extends Container {
-  constructor(symbols) {
-    super();
-    this.symbols = symbols;
-    this.rows = 5;
-    this.currentSymbols = [];
-    this.sprites = [];
-    const SYMBOL_HEIGHT = 90;
 
-    for (let i = 0; i < this.rows; i++) {
-      const sprite = new Sprite();
-      sprite.width = SYMBOL_HEIGHT;
-      sprite.height = SYMBOL_HEIGHT;
-      sprite.y = i * SYMBOL_HEIGHT;
+    constructor(symbols) {
+        super();
 
-      this.addChild(sprite);
-      this.sprites.push(sprite);
+        this.availableSymbols = symbols;
+
+        this.rows = 3;
+
+        this.symbolHeight = 120;
+
+        this.sprites = [];
+
+        this.currentSymbols = [];
+
+        this.spinning = false;
+
+        this.speed = 0;
+
+
+        for(let i = 0; i < this.rows; i++){
+
+            const symbol =
+                this.randomSymbol();
+
+
+            const sprite =
+                new Sprite(
+                    Texture.from(symbol.texture)
+                );
+
+
+            sprite.width = 120;
+            sprite.height = 120;
+
+            sprite.y =
+                i * this.symbolHeight;
+
+
+            this.addChild(sprite);
+
+
+            this.sprites.push(sprite);
+
+            this.currentSymbols.push(symbol);
+
+        }
+
+
+
+        // Window mask
+        const mask =
+            new Graphics();
+
+
+        mask.rect(
+            0,
+            0,
+            120,
+            360
+        );
+
+
+        mask.fill(0xffffff);
+
+
+        this.addChild(mask);
+
+        this.mask = mask;
+
     }
 
-    this.spinning = false;
-    this.speed = 0;
-    this.randomize();
-  }
 
-  randomize() {
-    this.currentSymbols = [];
-    this.sprites.forEach((sprite) => {
-      const symbol =
-        this.symbols[Math.floor(Math.random() * this.symbols.length)];
-      this.currentSymbols.push(symbol);
-      sprite.texture = Assets.get(symbol.texture);
-    });
-  }
 
-  start() {
-    this.spinning = true;
-    this.speed = 50;
-  }
+    randomSymbol(){
 
-  stop() {
-    this.spinning = false;
-    this.speed = 0;
-    this.randomize();
-  }
+        return this.availableSymbols[
+            Math.floor(
+                Math.random()
+                *
+                this.availableSymbols.length
+            )
+        ];
 
-update(delta) {
-    const SYMBOL_HEIGHT = 90;
+    }
 
-    if (!this.spinning) return;
 
-    this.sprites.forEach((sprite) => {
-        sprite.y += this.speed * delta;
 
-        if (sprite.y >= SYMBOL_HEIGHT * this.rows) {
-            sprite.y -= SYMBOL_HEIGHT * this.rows;
-        }
-    });
-} 
+
+    start(){
+
+        this.spinning=true;
+
+        this.speed=40;
+
+    }
+
+
+
+
+    stop(){
+
+        this.spinning=false;
+
+        this.speed=0;
+
+
+        // Force perfect alignment
+        this.sprites.forEach(
+            (sprite,index)=>{
+
+                sprite.y =
+                    index *
+                    this.symbolHeight;
+
+            }
+        );
+
+
+
+        // Save result
+        this.currentSymbols =
+            this.sprites.map(sprite=>{
+
+                const symbol =
+                    this.randomSymbol();
+
+
+                sprite.texture =
+                    Texture.from(
+                        symbol.texture
+                    );
+
+
+                return symbol;
+
+            });
+
+    }
+
+
+
+
+    update(delta){
+
+
+        if(!this.spinning)
+            return;
+
+
+
+        this.sprites.forEach(sprite=>{
+
+
+            sprite.y +=
+                this.speed *
+                delta;
+
+
+
+            if(
+                sprite.y >=
+                this.symbolHeight *
+                this.rows
+            ){
+
+                sprite.y -=
+                    this.symbolHeight *
+                    this.rows;
+
+
+
+                const symbol =
+                    this.randomSymbol();
+
+
+                sprite.texture =
+                    Texture.from(
+                        symbol.texture
+                    );
+
+            }
+
+
+        });
+
+    }
+
 }
