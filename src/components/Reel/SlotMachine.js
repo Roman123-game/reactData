@@ -263,13 +263,13 @@ export class SlotMachine extends Container {
     });
     let awarded = 0;
     if (scatters === 3) {
-      awarded = 10;
+      awarded = 1;
     }
     if (scatters === 4) {
-      awarded = 15;
+      awarded = 5;
     }
     if (scatters >= 5) {
-      awarded = 20;
+      awarded = 10;
     }
     if (awarded > 0) {
       this.freeSpins += awarded;

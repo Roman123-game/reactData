@@ -93,9 +93,9 @@ export class Paytable extends Container {
 `⭐ WILD
 Substitutes normal symbols
 🎁 SCATTER
-3 = 10 FREE SPINS
-4 = 15 FREE SPINS
-5 = 20 FREE SPINS
+3 = 1 FREE SPINS
+4 = 5 FREE SPINS
+5 = 10 FREE SPINS
 WINS PAY LEFT → RIGHT`,
       style: new TextStyle({
         fill: 0xffff99,
