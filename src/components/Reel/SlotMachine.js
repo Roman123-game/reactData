@@ -6,7 +6,7 @@ export class SlotMachine extends Container {
     super();
     this.app = app;
     this.symbols = symbols;
-    this.credits = 100;
+    this.credits = 5;
     this.isSpinning = false;
     this.reels = [];
     this.freeSpins = 0;
