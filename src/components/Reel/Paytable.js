@@ -4,19 +4,7 @@ export class Paytable extends Container {
     super();
     this.visible = false;
     this.eventMode = "static";
-    // =========================
-    // Dark overlay
-    // =========================
-    // const overlay = new Graphics()
-    //   .rect(0, 0, 600, 800)
-    //   .fill({
-    //     color: 0x000000,
-    //     alpha: 0.75
-    //   });
-    // this.addChild(overlay);
-    // =========================
-    // Main panel
-    // =========================
+    
     const panel = new Graphics()
       .roundRect(40,-40, 520, 720, 20)
       .fill(0x222222)
