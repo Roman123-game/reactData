@@ -35,7 +35,7 @@ export const symbols = [
   {
     name: "bank",
     texture: bank,
-    payout: 1,
+    payout: 2,
     type: "normal",
   },
   {
@@ -59,7 +59,7 @@ export const symbols = [
   {
     name: "Hrp",
     texture: hrp,
-    payout: 1,
+    payout: 2,
     type: "normal",
   },
   {
