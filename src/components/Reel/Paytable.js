@@ -7,18 +7,18 @@ export class Paytable extends Container {
     // =========================
     // Dark overlay
     // =========================
-    const overlay = new Graphics()
-      .rect(0, 0, 600, 800)
-      .fill({
-        color: 0x000000,
-        alpha: 0.75
-      });
-    this.addChild(overlay);
+    // const overlay = new Graphics()
+    //   .rect(0, 0, 600, 800)
+    //   .fill({
+    //     color: 0x000000,
+    //     alpha: 0.75
+    //   });
+    // this.addChild(overlay);
     // =========================
     // Main panel
     // =========================
     const panel = new Graphics()
-      .roundRect(40, 40, 520, 720, 20)
+      .roundRect(40,-40, 520, 720, 20)
       .fill(0x222222)
       .stroke({
         width: 4,
@@ -38,7 +38,7 @@ export class Paytable extends Container {
     });
     title.anchor.set(0.5);
     title.x = 300;
-    title.y = 80;
+    title.y = 0;
     this.addChild(title);
     // =========================
     // Symbols - TWO COLUMNS
@@ -46,11 +46,11 @@ export class Paytable extends Container {
     const positions = [
       {
         x: 100,
-        y: 20
+        y: -40
       },
       {
         x: 430,
-        y: 20
+        y: -40
       }
     ];
     symbols.forEach((symbol,index)=>{

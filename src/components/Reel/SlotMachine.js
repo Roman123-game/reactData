@@ -82,7 +82,7 @@ export class SlotMachine extends Container {
   createAutoSpinButton() {
     const button = new Graphics();
 
-    button.roundRect(440, 2, 140, 56, 15);
+    button.roundRect(484, 2, 140, 56, 15);
     button.fill(0xaa3333);
 
     button.y = 480;
@@ -91,7 +91,7 @@ export class SlotMachine extends Container {
     button.cursor = "pointer";
 
     const text = new Text({
-      text: "Auto",
+      text: "AUTO",
       style: {
         fill: "white",
         fontSize: 22,
@@ -99,7 +99,7 @@ export class SlotMachine extends Container {
     });
 
     text.anchor.set(0.5);
-    text.x = 510;
+    text.x = 560;
     text.y = 30;
 
     button.addChild(text);
@@ -124,7 +124,7 @@ export class SlotMachine extends Container {
   }
   createSpinButton() {
     const button = new Graphics();
-    button.roundRect(0, 2, 200, 56, 15);
+    button.roundRect(-74, 2, 200, 56, 15);
     button.fill(0x22aa55);
     button.y = 480;
     button.eventMode = "static";
@@ -137,7 +137,7 @@ export class SlotMachine extends Container {
       },
     });
     text.anchor.set(0.5);
-    text.x = 100;
+    text.x = 25;
     text.y = 30;
     button.addChild(text);
     button.on("pointerdown", () => this.spin());
