@@ -42,7 +42,7 @@ export const symbols = [
     name: "cryptoTreasure",
     texture: cryptoTreasure,
     payout:3,
-    type: "normal",
+    type: "scatter",
   },
   {
     name: "Matic",
@@ -114,7 +114,7 @@ export const symbols = [
     name: "Jackpot",
     texture: jackpot,
     payout: 0,
-    type: "scatter",
+    type: "wild",
   },
   {
     name: "Vault",
