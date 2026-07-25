@@ -113,7 +113,7 @@ export const symbols = [
   {
     name: "Jackpot",
     texture: jackpot,
-    payout: 15,
+    payout: 0,
     type: "scatter",
   },
   {
