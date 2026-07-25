@@ -23,13 +23,13 @@ export const symbols = [
     {
     name: "Compas",
     texture: compas,
-    payout: 1,
+    payout: 2,
     type: "normal",
   },
   {
     name: "blockChain",
     texture: blockChain,
-    payout: 1,
+    payout: 2,
     type: "normal",
   },
   {
