@@ -106,25 +106,14 @@ export class Reel extends Container {
 
     if (this.stopping && this.stopping.elapsed >= this.stopping.duration) {
       const stop = this.stopping;
-      const slots = this.sprites
+      this.currentSymbols = this.sprites
         .map((sprite, index) => ({
-          sprite,
           symbol: this.spriteSymbols[index],
-          border: this.slotBorders[index],
           y: sprite.y,
         }))
-        .sort((a, b) => a.y - b.y);
-
-      this.sprites = slots.map(({ sprite }, index) => {
-        sprite.y = (index - 1) * this.symbolHeight;
-        return sprite;
-      });
-      this.spriteSymbols = slots.map(({ symbol }) => symbol);
-      this.slotBorders = slots.map(({ border }, index) => {
-        border.y = (index - 1) * this.symbolHeight;
-        return border;
-      });
-      this.currentSymbols = this.spriteSymbols.slice(1, this.visibleRows + 1);
+        .filter(({ y }) => y >= 0 && y < this.visibleRows * this.symbolHeight)
+        .sort((a, b) => a.y - b.y)
+        .map(({ symbol }) => symbol);
 
       this.spinning = false;
       this.speed = 0;
