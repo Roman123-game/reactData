@@ -73,92 +73,101 @@ export class SlotMachine extends Container {
       });
     });
   }
-  createAutoSpinButton() {
+  createButton({ x, width, label, colors, onClick }) {
     const button = new Graphics();
-
-    button.roundRect(484, 2, 140, 56, 15);
-    button.fill(0xaa3333);
-
-    button.y = 490;
-
-    button.eventMode = "static";
-    button.cursor = "pointer";
-
     const text = new Text({
-      text: "AUTO",
-      style: {
-        fill: "white",
-        fontSize: 22,
-      },
+      text: label,
+      style: new TextStyle({
+        fill: 0xffffff,
+        fontFamily: "Arial",
+        fontSize: 20,
+        fontWeight: "bold",
+        letterSpacing: 1.5,
+        dropShadow: { color: 0x07121b, blur: 2, distance: 1, alpha: 0.8 },
+      }),
     });
 
     text.anchor.set(0.5);
-    text.x = 560;
-    text.y = 30;
+    text.x = x + width / 2;
+    text.y = 28;
+    button.y = 490;
+    button.eventMode = "static";
+    button.cursor = "pointer";
 
+    const draw = (state) => {
+      const faceColor = state === "hover" ? colors.hover : colors.face;
+      const offset = state === "pressed" ? 5 : 0;
+      button.clear();
+      button.roundRect(x, 8, width, 56, 15)
+        .fill({ color: 0x050a12, alpha: 0.72 });
+      button.roundRect(x, 4 + offset, width, 56, 15)
+        .fill(0x111d2a)
+        .stroke({ width: 2, color: colors.border, alpha: 0.9 });
+      button.roundRect(x + 3, 2 + offset, width - 6, 48, 12)
+        .fill(faceColor)
+        .stroke({ width: 1, color: 0xffffff, alpha: 0.3 });
+      button.roundRect(x + 8, 6 + offset, width - 16, 8, 4)
+        .fill({ color: 0xffffff, alpha: state === "hover" ? 0.3 : 0.18 });
+      text.y = 26 + offset;
+    };
+
+    draw("idle");
     button.addChild(text);
-
+    button.on("pointerover", () => draw("hover"));
+    button.on("pointerout", () => draw("idle"));
     button.on("pointerdown", () => {
-      this.autoSpin = !this.autoSpin;
-
-      if (this.autoSpin) {
-        this.autoSpinCount = 50;
-
-        text.text = "STOP";
-
-        this.spin();
-      } else {
-        this.autoSpinCount = 0;
-
-        text.text = "AUTO";
-      }
+      draw("pressed");
+      onClick();
     });
+    button.on("pointerup", () => draw("hover"));
+    button.on("pointerupoutside", () => draw("idle"));
 
     this.addChild(button);
+    return { button, text, draw, colors };
+  }
+  createAutoSpinButton() {
+    const control = this.createButton({
+      x: 484,
+      width: 140,
+      label: "AUTO",
+      colors: { face: 0x9d3542, hover: 0xc34655, border: 0xf36a72 },
+      onClick: () => {
+        this.autoSpin = !this.autoSpin;
+        if (this.autoSpin) {
+          this.autoSpinCount = 50;
+          control.text.text = "STOP";
+          this.spin();
+        } else {
+          this.autoSpinCount = 0;
+          control.text.text = "AUTO";
+        }
+        Object.assign(
+          control.colors,
+          this.autoSpin
+            ? { face: 0x16866e, hover: 0x1da88a, border: 0x4fe0bb }
+            : { face: 0x9d3542, hover: 0xc34655, border: 0xf36a72 },
+        );
+        control.draw("idle");
+      },
+    });
   }
   createSpinButton() {
-    const button = new Graphics();
-    button.roundRect(-24, 2, 200, 56, 15);
-    button.fill(0x22aa55);
-    button.y = 490;
-    button.eventMode = "static";
-    button.cursor = "pointer";
-    const text = new Text({
-      text: "SPIN",
-      style: {
-        fill: "white",
-        fontSize: 22,
-      },
+    this.createButton({
+      x: -24,
+      width: 200,
+      label: "SPIN",
+      colors: { face: 0x16866e, hover: 0x1da88a, border: 0x4fe0bb },
+      onClick: () => this.spin(),
     });
-    text.anchor.set(0.5);
-    text.x = 76;
-    text.y = 30;
-    button.addChild(text);
-    button.on("pointerdown", () => this.spin());
-    this.addChild(button);
   }
   createPaytableButton() {
-    const button = new Graphics();
-    button.roundRect(220, 2, 200, 56, 15);
-    button.fill(0x3366cc);
-    button.y = 490;
-    button.eventMode = "static";
-    button.cursor = "pointer";
-    const text = new Text({
-      text: "PAYTABLE",
-      style: {
-        fill: "white",
-        fontSize: 22,
-      },
+    this.createButton({
+      x: 220,
+      width: 200,
+      label: "PAYTABLE",
+      colors: { face: 0x285c9c, hover: 0x3479bd, border: 0x74b9ed },
+      onClick: () => this.paytable.toggle(),
     });
-    text.anchor.set(0.5);
-    text.x = 320;
-    text.y = 30;
-    button.addChild(text);
-    button.on("pointerdown", () => {
-      this.paytable.toggle();
-    });
-    this.addChild(button);
   }
   spin() {
     if (this.isSpinning) return;
