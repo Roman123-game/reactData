@@ -49,14 +49,6 @@ export class SlotMachine extends Container {
     this.addChild(this.winLines);
     this.x = (app.screen.width - 600) / 2;
     this.y = 80;
-    // Frame
-    const frame = new Graphics();
-    frame.rect(-10, -4, 620, 380);
-    frame.stroke({
-      width: 5,
-      color: 0xffd700,
-    });
-    this.addChildAt(frame, 0);
     // Credits
     this.creditText = new Text({
       text: `Credits: ${this.credits}`,
