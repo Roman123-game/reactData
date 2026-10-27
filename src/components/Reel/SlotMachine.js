@@ -73,7 +73,7 @@ export class SlotMachine extends Container {
       });
     });
   }
-  createButton({ x, width, label, colors, onClick }) {
+  createButton({ x, width, label, colors, onClick, isActive = () => false }) {
     const button = new Graphics();
     const text = new Text({
       text: label,
@@ -95,8 +95,9 @@ export class SlotMachine extends Container {
     button.cursor = "pointer";
 
     const draw = (state) => {
-      const faceColor = state === "hover" ? colors.hover : colors.face;
-      const offset = state === "pressed" ? 5 : 0;
+      const faceColor =
+        state === "hover" ? colors.hover : state === "active" ? colors.active : colors.face;
+      const offset = state === "pressed" ? 5 : state === "active" ? 4 : 0;
       button.clear();
       button.roundRect(x, 8, width, 56, 15)
         .fill({ color: 0x050a12, alpha: 0.72 });
@@ -113,43 +114,62 @@ export class SlotMachine extends Container {
 
     draw("idle");
     button.addChild(text);
-    button.on("pointerover", () => draw("hover"));
-    button.on("pointerout", () => draw("idle"));
+    button.on("pointerover", () => draw(isActive() ? "active" : "hover"));
+    button.on("pointerout", () => draw(isActive() ? "active" : "idle"));
     button.on("pointerdown", () => {
       draw("pressed");
       onClick();
     });
-    button.on("pointerup", () => draw("hover"));
-    button.on("pointerupoutside", () => draw("idle"));
+    button.on("pointerup", () => draw(isActive() ? "active" : "hover"));
+    button.on("pointerupoutside", () => draw(isActive() ? "active" : "idle"));
 
     this.addChild(button);
     return { button, text, draw, colors };
   }
   createAutoSpinButton() {
-    const control = this.createButton({
+    this.autoSpinButton = this.createButton({
       x: 484,
       width: 140,
       label: "AUTO",
-      colors: { face: 0x9d3542, hover: 0xc34655, border: 0xf36a72 },
+      colors: {
+        face: 0x9d3542,
+        hover: 0xc34655,
+        border: 0xf36a72,
+        active: 0x116c5c,
+      },
+      isActive: () => this.autoSpin,
       onClick: () => {
         this.autoSpin = !this.autoSpin;
         if (this.autoSpin) {
           this.autoSpinCount = 50;
-          control.text.text = "STOP";
           this.spin();
         } else {
           this.autoSpinCount = 0;
-          control.text.text = "AUTO";
         }
-        Object.assign(
-          control.colors,
-          this.autoSpin
-            ? { face: 0x16866e, hover: 0x1da88a, border: 0x4fe0bb }
-            : { face: 0x9d3542, hover: 0xc34655, border: 0xf36a72 },
-        );
-        control.draw("idle");
+        this.updateAutoSpinButton();
       },
     });
+  }
+  updateAutoSpinButton() {
+    const { text, colors, draw } = this.autoSpinButton;
+    text.text = this.autoSpin ? "STOP" : "AUTO";
+    Object.assign(
+      colors,
+      this.autoSpin
+        ? {
+            face: 0x16866e,
+            hover: 0x1da88a,
+            border: 0x4fe0bb,
+            active: 0x116c5c,
+          }
+        : {
+            face: 0x9d3542,
+            hover: 0xc34655,
+            border: 0xf36a72,
+            active: 0x116c5c,
+          },
+    );
+    draw(this.autoSpin ? "active" : "idle");
   }
   createSpinButton() {
     this.createButton({
@@ -175,6 +195,7 @@ export class SlotMachine extends Container {
     // Stop auto spin when limit reached
     if (this.autoSpin && this.autoSpinCount <= 0) {
       this.autoSpin = false;
+      this.updateAutoSpinButton();
       return;
     }
 
@@ -192,6 +213,7 @@ export class SlotMachine extends Container {
 
       if (this.credits < 5) {
         this.autoSpin = false;
+        this.updateAutoSpinButton();
 
         return;
       }
@@ -243,6 +265,7 @@ export class SlotMachine extends Container {
 
                   if (this.autoSpin) {
                     this.autoSpin = false;
+                    this.updateAutoSpinButton();
                   }
 
                   this.freeSpinText.text = "";
