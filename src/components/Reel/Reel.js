@@ -7,6 +7,7 @@ export class Reel extends Container {
     this.rows = 3;
     this.symbolHeight = 120;
     this.sprites = [];
+    this.slotBorders = [];
     this.currentSymbols = [];
     this.spinning = false;
     this.speed = 0;
@@ -20,6 +21,13 @@ export class Reel extends Container {
       this.addChild(sprite);
       this.sprites.push(sprite);
       this.currentSymbols.push(symbol);
+
+      const slotBorder = new Graphics();
+      slotBorder.roundRect(2, 2, 116, 116, 8)
+        .stroke({ width: 2, color: 0x34d6c5, alpha: 0.7 });
+      slotBorder.y = sprite.y;
+      this.addChild(slotBorder);
+      this.slotBorders.push(slotBorder);
     }
 
     // Window mask
@@ -42,6 +50,7 @@ export class Reel extends Container {
     // Force perfect alignment
     this.sprites.forEach((sprite, index) => {
       sprite.y = index * this.symbolHeight;
+      this.slotBorders[index].y = sprite.y;
     });
 
     this.currentSymbols = this.sprites.map((sprite) => {
@@ -54,7 +63,7 @@ export class Reel extends Container {
   update(delta) {
     if (!this.spinning) return;
     
-    this.sprites.forEach((sprite) => {
+    this.sprites.forEach((sprite, index) => {
       sprite.y += this.speed * delta;
 
       if (sprite.y >= this.symbolHeight * this.rows) {
@@ -62,6 +71,7 @@ export class Reel extends Container {
         const symbol = this.randomSymbol();
         sprite.texture = Texture.from(symbol.texture);
       }
+      this.slotBorders[index].y = sprite.y;
     });
   }
 }
