@@ -305,6 +305,14 @@ export class SlotMachine extends Container {
   drawWinLine(line) {
     const reelWidth = 120;
     const cellHeight = 120;
+
+    for (let i = 0; i < line.length; i++) {
+      this.winLines
+        .roundRect(i * reelWidth + 2, line[i] * cellHeight + 2, 116, 116, 8)
+        .fill({ color: 0x00ff66, alpha: 0.22 })
+        .stroke({ width: 3, color: 0x00ff66, alpha: 0.95 });
+    }
+
     this.winLines.moveTo(45, line[0] * cellHeight + 60);
     for (let i = 1; i < line.length; i++) {
       this.winLines.lineTo(i * reelWidth + 60, line[i] * cellHeight + 60);
@@ -314,14 +322,5 @@ export class SlotMachine extends Container {
       color: 0xff0000,
       alpha: 0.9,
     });
-    // highlight circles
-    for (let i = 0; i < line.length; i++) {
-      this.winLines.circle(i * reelWidth + 60, line[i] * cellHeight + 60, 35);
-      this.winLines.stroke({
-        width: 4,
-        color: 0xffff00,
-        alpha: 1,
-      });
-    }
   }
 }
