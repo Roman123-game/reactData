@@ -95,9 +95,11 @@ export class Reel extends Container {
       sprite.y += movement;
       if (sprite.y >= wrapPosition) {
         sprite.y -= cycleLength;
-        const symbol = this.randomSymbol();
-        sprite.texture = Texture.from(symbol.texture);
-        this.spriteSymbols[index] = symbol;
+        if (!this.stopping) {
+          const symbol = this.randomSymbol();
+          sprite.texture = Texture.from(symbol.texture);
+          this.spriteSymbols[index] = symbol;
+        }
       }
       this.slotBorders[index].y = sprite.y;
     });
