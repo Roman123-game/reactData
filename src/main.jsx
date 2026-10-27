@@ -314,6 +314,11 @@ async function init() {
     width: 1060,
     height: 800,
     background: 0x070b16,
+    autoDensity: true,
+    resolution: Math.min(window.devicePixelRatio || 1, 2),
+    preference: "webgpu",
+    webgpu: { powerPreference: "high-performance" },
+    webgl: { powerPreference: "high-performance" },
   });
 
   document.getElementById("root").appendChild(app.canvas);

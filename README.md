@@ -1,8 +1,18 @@
-# React + Vite
+# Crypto Jackpot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A slot machine game built with PixiJS and Vite.
 
-Currently, two official plugins are available:
+## Rendering
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The renderer prefers WebGPU and falls back to WebGL when WebGPU is unavailable. PixiJS can use its Canvas renderer as a final compatibility fallback when GPU rendering is unavailable. GPU contexts request a high-performance adapter, and rendering resolution is capped at 2x the device pixel ratio.
+
+Reel blur filters are enabled only while spinning to avoid unnecessary filter passes while idle.
+
+## Development
+
+```sh
+npm install
+npm run dev
+```
+
+Create a production build with `npm run build` and run the linter with `npm run lint`.

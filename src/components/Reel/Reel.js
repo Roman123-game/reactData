@@ -18,7 +18,6 @@ export class Reel extends Container {
     this.blur = new BlurFilter();
     this.blur.blurX = 0;
     this.blur.blurY = 0;
-    this.filters = [this.blur];
 
     for (let i = 0; i < this.rows; i++) {
       const symbol = this.randomSymbol();
@@ -56,6 +55,7 @@ export class Reel extends Container {
   start() {
     this.spinning = true;
     this.speed = 40;
+    this.filters = [this.blur];
   }
 
   stop() {
@@ -131,6 +131,7 @@ export class Reel extends Container {
       this.spinning = false;
       this.speed = 0;
       this.blur.blurY = 0;
+      this.filters = null;
       this.stopping = null;
       this.stopPromise = null;
       stop.resolve();
