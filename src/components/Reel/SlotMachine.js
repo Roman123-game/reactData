@@ -51,7 +51,7 @@ export class SlotMachine extends Container {
     this.y = 80;
     // Frame
     const frame = new Graphics();
-    frame.rect(-10, -10, 620, 380);
+    frame.rect(-10, -4, 620, 380);
     frame.stroke({
       width: 5,
       color: 0xffd700,
@@ -85,7 +85,7 @@ export class SlotMachine extends Container {
     button.roundRect(484, 2, 140, 56, 15);
     button.fill(0xaa3333);
 
-    button.y = 480;
+    button.y = 490;
 
     button.eventMode = "static";
     button.cursor = "pointer";
@@ -124,9 +124,9 @@ export class SlotMachine extends Container {
   }
   createSpinButton() {
     const button = new Graphics();
-    button.roundRect(-74, 2, 200, 56, 15);
+    button.roundRect(-24, 2, 200, 56, 15);
     button.fill(0x22aa55);
-    button.y = 480;
+    button.y = 490;
     button.eventMode = "static";
     button.cursor = "pointer";
     const text = new Text({
@@ -137,7 +137,7 @@ export class SlotMachine extends Container {
       },
     });
     text.anchor.set(0.5);
-    text.x = 25;
+    text.x = 76;
     text.y = 30;
     button.addChild(text);
     button.on("pointerdown", () => this.spin());
@@ -147,7 +147,7 @@ export class SlotMachine extends Container {
     const button = new Graphics();
     button.roundRect(220, 2, 200, 56, 15);
     button.fill(0x3366cc);
-    button.y = 480;
+    button.y = 490;
     button.eventMode = "static";
     button.cursor = "pointer";
     const text = new Text({
