@@ -57,11 +57,13 @@ export class SlotFrame extends Container {
     cabinet.roundRect(198, 617, 664, 85, 16)
       .stroke({ width: 1, color: 0xe7b75a, alpha: 0.8 });
 
-    for (const x of [198, 862]) {
-      for (const y of [137, 575, 632, 687]) {
-        cabinet.circle(x, y, 4).fill(0xf4c66a);
-        cabinet.circle(x, y, 1.5).fill(0xfff0bc);
-      }
+    const frameDots = [
+      [205, 144], [855, 144], [205, 568], [855, 568],
+      [210, 629], [850, 629], [210, 690], [850, 690],
+    ];
+    for (const [x, y] of frameDots) {
+      cabinet.circle(x, y, 4).fill(0xf4c66a);
+      cabinet.circle(x, y, 1.5).fill(0xfff0bc);
     }
     this.addChild(cabinet);
 
