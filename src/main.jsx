@@ -16,13 +16,31 @@ export class SlotFrame extends Container {
     backdrop.roundRect(27, 27, 1006, 746, 28)
       .stroke({ width: 1, color: 0x946d35, alpha: 0.75 });
 
-    for (let index = 0; index < 11; index++) {
-      const x = 60 + index * 90;
-      backdrop.moveTo(x, 35).lineTo(x + 170, 205);
-      backdrop.moveTo(x, 765).lineTo(x + 170, 595);
-    }
-    backdrop.stroke({ width: 1, color: 0x17303b, alpha: 0.48 });
     this.addChild(backdrop);
+
+    const backgroundSymbols = ["₿", "Ξ", "₮", "◇", "◎", "◆"];
+    const symbolColors = [0xf2a900, 0x9aabff, 0x26a17b, 0x34d6c5];
+    const symbolPositions = [
+      [76, 182], [142, 274], [82, 378], [142, 482], [78, 570], [136, 728],
+      [922, 182], [984, 274], [926, 378], [986, 482], [922, 570], [984, 728],
+      [280, 746], [430, 746], [630, 746], [780, 746],
+    ];
+    symbolPositions.forEach(([x, y], index) => {
+      const symbol = new Text({
+        text: backgroundSymbols[index % backgroundSymbols.length],
+        style: new TextStyle({
+          fill: symbolColors[index % symbolColors.length],
+          fontFamily: "Arial",
+          fontSize: index % 3 === 0 ? 34 : 26,
+          fontWeight: "bold",
+        }),
+      });
+      symbol.anchor.set(0.5);
+      symbol.alpha = 0.25;
+      symbol.x = x;
+      symbol.y = y;
+      this.addChild(symbol);
+    });
 
     const cabinet = new Graphics();
     cabinet.roundRect(173, 112, 714, 488, 28)
