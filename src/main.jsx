@@ -11,6 +11,10 @@ export class SlotFrame extends Container {
     this.isCurrencyHighlighted = false;
     this.highlightAllCurrencies = false;
     this.highlightedCurrencyIndex = -1;
+    this.confettiLayer = new Container();
+    this.confettiParticles = [];
+    this.confettiColors = [0xffd778, 0x34d6c5, 0x9aabff, 0xff6b8a, 0xffffff];
+    app.ticker.add((ticker) => this.updateConfetti(ticker.deltaMS));
 
     const backdrop = new Graphics();
     backdrop.rect(0, 0, 1060, 800).fill(0x070b16);
@@ -133,6 +137,130 @@ export class SlotFrame extends Container {
     this.highlightedCurrencyIndex = this.highlightAllCurrencies
       ? -1
       : Math.floor(Math.random() * this.currencySymbols.length);
+    this.shootConfetti();
+  }
+
+  shootConfetti() {
+    const corners = [
+      [18, 782],
+      [1042, 782],
+    ];
+
+    corners.forEach(([startX, startY]) => {
+      for (let i = 0; i < 32; i++) {
+        const width = 5 + Math.random() * 8;
+        const height = 7 + Math.random() * 12;
+        const particle = new Graphics();
+        const shape = Math.floor(Math.random() * 3);
+        const color = this.confettiColors[
+          Math.floor(Math.random() * this.confettiColors.length)
+        ];
+
+        if (shape === 0) {
+          particle.rect(-width / 2, -height / 2, width, height).fill(color);
+        } else if (shape === 1) {
+          particle.roundRect(-width / 2, -height / 2, width, height, 2).fill(color);
+        } else {
+          particle
+            .moveTo(0, -height / 2)
+            .lineTo(width / 2, height / 2)
+            .lineTo(-width / 2, height / 2)
+            .closePath()
+            .fill(color);
+        }
+
+        const originX = startX + (Math.random() - 0.5) * 24;
+        const originY = startY + Math.random() * 18;
+        const targetX = 530 + (Math.random() - 0.5) * 300;
+        const targetY = 360 + Math.random() * 80;
+        const gravity = 0.0015 + Math.random() * 0.001;
+        const flightDuration = Math.sqrt(
+          (2 * (originY - targetY)) / gravity,
+        );
+
+        particle.x = originX;
+        particle.y = originY;
+        this.confettiLayer.addChild(particle);
+        this.confettiParticles.push({
+          particle,
+          originX,
+          originY,
+          targetX,
+          targetY,
+          gravity,
+          flightDuration,
+          flightElapsed: 0,
+          fallElapsed: 0,
+          fallDuration:
+            Math.sqrt((2 * (800 - targetY)) / gravity) + 180,
+          fallDrift: (Math.random() - 0.5) * 0.12,
+          flutter: 10 + Math.random() * 24,
+          phase: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.04,
+        });
+      }
+    });
+  }
+
+  updateConfetti(deltaMS) {
+    for (let i = this.confettiParticles.length - 1; i >= 0; i--) {
+      const confetti = this.confettiParticles[i];
+      if (confetti.flightElapsed < confetti.flightDuration) {
+        confetti.flightElapsed = Math.min(
+          confetti.flightElapsed + deltaMS,
+          confetti.flightDuration,
+        );
+        const flightTime = confetti.flightElapsed;
+        const progress = flightTime / confetti.flightDuration;
+        const flutter =
+          Math.sin(progress * 16 + confetti.phase) * confetti.flutter * progress;
+        const initialVelocityY = -confetti.gravity * confetti.flightDuration;
+
+        confetti.particle.x =
+          confetti.originX +
+          (confetti.targetX - confetti.originX) * progress +
+          flutter;
+        confetti.particle.y =
+          confetti.originY +
+          initialVelocityY * flightTime +
+          0.5 * confetti.gravity * flightTime ** 2;
+      } else {
+        confetti.fallElapsed = Math.min(
+          confetti.fallElapsed + deltaMS,
+          confetti.fallDuration,
+        );
+        const fallTime = confetti.fallElapsed;
+        const progress = fallTime / confetti.fallDuration;
+
+        confetti.particle.x = confetti.targetX + confetti.fallDrift * fallTime;
+        confetti.particle.y =
+          confetti.targetY + 0.5 * confetti.gravity * fallTime ** 2;
+        confetti.particle.alpha = Math.min(
+          1,
+          (confetti.fallDuration - fallTime) / 180,
+        );
+
+        if (progress === 1) {
+          this.confettiLayer.removeChild(confetti.particle);
+          confetti.particle.destroy();
+          this.confettiParticles.splice(i, 1);
+          continue;
+        }
+      }
+
+      confetti.particle.rotation += deltaMS * confetti.spin;
+      confetti.particle.scale.y =
+        0.25 +
+        Math.abs(
+          Math.sin(
+            (confetti.flightElapsed + confetti.fallElapsed) * 0.02 +
+              confetti.phase,
+          ),
+        );
+      if (confetti.fallElapsed === 0) {
+        confetti.particle.alpha = 1;
+      }
+    }
   }
 
   updateCurrencyHighlight(deltaMS) {
@@ -196,6 +324,7 @@ async function init() {
   slotMachine.y = 140;
   app.stage.addChild(frame);
   app.stage.addChild(slotMachine);
+  app.stage.addChild(frame.confettiLayer);
 }
 
 init();

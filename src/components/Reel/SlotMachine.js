@@ -14,6 +14,8 @@ export class SlotMachine extends Container {
     this.inFreeSpin = false;
     this.autoSpin = false;
     this.autoSpinCount = 0;
+    this.winGreetingElapsed = 0;
+    this.winGreetingDuration = 1800;
     this.freeSpinText = new Text({
       text: "",
       style: new TextStyle({
@@ -63,6 +65,24 @@ export class SlotMachine extends Container {
     this.createSpinButton();
     this.createPaytableButton();
     this.createAutoSpinButton();
+    this.winGreeting = new Text({
+      text: "SALUT !",
+      style: new TextStyle({
+        fill: 0xffd778,
+        fontFamily: "Arial",
+        fontSize: 44,
+        fontWeight: "900",
+        letterSpacing: 3,
+        stroke: { color: 0x70451d, width: 5 },
+        dropShadow: { color: 0xf19b35, blur: 12, distance: 0, alpha: 0.7 },
+      }),
+    });
+    this.winGreeting.anchor.set(0.5);
+    this.winGreeting.x = 300;
+    this.winGreeting.y = -4;
+    this.winGreeting.alpha = 0;
+    this.winGreeting.visible = false;
+    this.addChild(this.winGreeting);
     this.paytable = new Paytable(symbols);
     this.paytable.y = -50;
     this.addChild(this.paytable);
@@ -71,7 +91,36 @@ export class SlotMachine extends Container {
       this.reels.forEach((reel) => {
         reel.update(ticker.deltaTime);
       });
+      this.updateWinGreeting(ticker.deltaMS);
     });
+  }
+  showWinGreeting() {
+    this.winGreetingElapsed = 0;
+    this.winGreeting.visible = true;
+    this.winGreeting.alpha = 1;
+    this.winGreeting.scale.set(0.6);
+  }
+  updateWinGreeting(deltaMS) {
+    if (!this.winGreeting.visible) return;
+
+    this.winGreetingElapsed += deltaMS;
+    if (this.winGreetingElapsed >= this.winGreetingDuration) {
+      this.winGreeting.visible = false;
+      this.winGreeting.alpha = 0;
+      return;
+    }
+
+    const elapsed = this.winGreetingElapsed;
+    const progress = Math.min(elapsed / 250, 1);
+    const pop = 0.6 + progress * 0.55;
+    const fade = Math.min(
+      1,
+      (this.winGreetingDuration - elapsed) / 350,
+    );
+    this.winGreeting.scale.set(pop);
+    this.winGreeting.y = -4 - Math.min(elapsed / 1000, 1) * 18;
+    this.winGreeting.rotation = Math.sin(elapsed / 130) * 0.06;
+    this.winGreeting.alpha = fade;
   }
   createButton({ x, width, label, colors, onClick, isActive = () => false }) {
     const button = new Graphics();
@@ -320,6 +369,7 @@ export class SlotMachine extends Container {
     if (win > 0) {
       this.credits += win;
       this.creditText.text = `WIN +${win} Credits:${this.credits}`;
+      this.showWinGreeting();
       this.onWin(win);
     }
   }
