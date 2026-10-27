@@ -154,31 +154,19 @@ export class SlotFrame extends Container {
 
     corners.forEach(([startX, startY]) => {
       for (let i = 0; i < particlesPerCorner; i++) {
-        const width = 20 + Math.random() * 24;
-        const height = 28 + Math.random() * 36;
+        const radius = 30 + Math.random() * 36;
         const particle = new Graphics();
-        const shape = Math.floor(Math.random() * 3);
         const color = this.confettiColors[
           Math.floor(Math.random() * this.confettiColors.length)
         ];
 
-        if (shape === 0) {
-          particle.rect(-width / 2, -height / 2, width, height).fill(color);
-        } else if (shape === 1) {
-          particle.roundRect(-width / 2, -height / 2, width, height, 6).fill(color);
-        } else {
-          particle
-            .moveTo(0, -height / 2)
-            .lineTo(width / 2, height / 2)
-            .lineTo(-width / 2, height / 2)
-            .closePath()
-            .fill(color);
-        }
+        particle.circle(0, 0, radius).fill(color);
 
         const originX = startX + (Math.random() - 0.5) * 24;
         const originY = startY + Math.random() * 18;
         const targetX = 530 + (Math.random() - 0.5) * 300;
         const targetY = 220 + Math.random() * 80;
+        const targetScale = 0.3 + Math.random() * 0.7;
         const gravity = 0.0015 + Math.random() * 0.001;
         const flightDuration = Math.sqrt(
           (2 * (originY - targetY)) / gravity,
@@ -186,6 +174,7 @@ export class SlotFrame extends Container {
 
         particle.x = originX;
         particle.y = originY;
+        particle.scale.set(0);
         this.confettiLayer.addChild(particle);
         this.confettiParticles.push({
           particle,
@@ -197,6 +186,8 @@ export class SlotFrame extends Container {
           flightDuration,
           flightElapsed: 0,
           fallElapsed: 0,
+          popElapsed: 0,
+          targetScale,
           fallDuration:
             Math.sqrt((2 * (800 - targetY)) / gravity) + 180,
           fallDrift: (Math.random() - 0.5) * 0.12,
@@ -211,6 +202,10 @@ export class SlotFrame extends Container {
   updateConfetti(deltaMS) {
     for (let i = this.confettiParticles.length - 1; i >= 0; i--) {
       const confetti = this.confettiParticles[i];
+      confetti.popElapsed = Math.min(confetti.popElapsed + deltaMS, 20);
+      const popProgress = confetti.popElapsed / 20;
+      const popScale = confetti.targetScale * (1 - (1 - popProgress) ** 3);
+
       if (confetti.flightElapsed < confetti.flightDuration) {
         confetti.flightElapsed = Math.min(
           confetti.flightElapsed + deltaMS,
@@ -255,14 +250,16 @@ export class SlotFrame extends Container {
       }
 
       confetti.particle.rotation += deltaMS * confetti.spin;
-      confetti.particle.scale.y =
+      confetti.particle.scale.x = popScale;
+      confetti.particle.scale.y = popScale * (
         0.25 +
         Math.abs(
           Math.sin(
             (confetti.flightElapsed + confetti.fallElapsed) * 0.02 +
               confetti.phase,
           ),
-        );
+        )
+      );
       if (confetti.fallElapsed === 0) {
         confetti.particle.alpha = 1;
       }
