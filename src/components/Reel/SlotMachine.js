@@ -318,7 +318,6 @@ export class SlotMachine extends Container {
         return;
       }
       this.credits -= 5;
-      this.credits -= 5;
     }
     this.freeSpinText.text = "";
 
