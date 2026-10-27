@@ -54,7 +54,7 @@ export class Reel extends Container {
 
   start() {
     this.spinning = true;
-    this.speed = 40;
+    this.speed = 24;
     this.filters = [this.blur];
   }
 
