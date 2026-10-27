@@ -55,7 +55,6 @@ export class Reel extends Container {
     if (!this.spinning) return Promise.resolve();
     if (this.stopping) return this.stopPromise;
 
-    const cycleLength = this.symbolHeight * this.rows;
     const phase = ((this.sprites[0].y % this.symbolHeight) + this.symbolHeight)
       % this.symbolHeight;
     const stopDistance =
