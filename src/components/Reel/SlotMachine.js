@@ -63,6 +63,7 @@ export class SlotMachine extends Container {
     this.createPaytableButton();
     this.createAutoSpinButton();
     this.paytable = new Paytable(symbols);
+    this.paytable.y = -50;
     this.addChild(this.paytable);
     // Update reels
     app.ticker.add((ticker) => {

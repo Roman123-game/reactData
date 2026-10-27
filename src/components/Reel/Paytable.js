@@ -120,8 +120,7 @@ WINS PAY LEFT → RIGHT`,
       text:"CLOSE",
       style:new TextStyle({
         fill:"white",
-        fontSize:24,
-        fontWeight:"bold"
+        fontSize:24
       })
     });
     closeText.anchor.set(0.5);
