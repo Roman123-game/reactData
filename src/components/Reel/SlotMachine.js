@@ -118,9 +118,9 @@ export class SlotMachine extends Container {
       style: new TextStyle({
         fill: 0xffd778,
         fontFamily: "Arial",
-        fontSize: 44,
+        fontSize: 74,
         fontWeight: "900",
-        letterSpacing: 3,
+        letterSpacing: 4,
         stroke: { color: 0x70451d, width: 5 },
         dropShadow: { color: 0xf19b35, blur: 12, distance: 0, alpha: 0.7 },
       }),
