@@ -178,7 +178,7 @@ export class SlotFrame extends Container {
         const originX = startX + (Math.random() - 0.5) * 24;
         const originY = startY + Math.random() * 18;
         const targetX = 530 + (Math.random() - 0.5) * 300;
-        const targetY = 360 + Math.random() * 80;
+        const targetY = 220 + Math.random() * 80;
         const gravity = 0.0015 + Math.random() * 0.001;
         const flightDuration = Math.sqrt(
           (2 * (originY - targetY)) / gravity,
