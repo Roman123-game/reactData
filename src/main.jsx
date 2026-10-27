@@ -48,7 +48,7 @@ export class SlotFrame extends Container {
       .stroke({ width: 5, color: 0x34d6c5 });
     cabinet.roundRect(183, 122, 694, 468, 22)
       .stroke({ width: 2, color: 0xe7b75a, alpha: 0.9 });
-    cabinet.roundRect(198, 132, 664, 390, 14)
+    cabinet.roundRect(225, 135, 610, 370, 14)
       .fill(0x080d18)
       .stroke({ width: 2, color: 0x205361 });
     cabinet.roundRect(188, 607, 684, 105, 22)

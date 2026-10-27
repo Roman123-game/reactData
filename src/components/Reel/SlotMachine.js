@@ -208,38 +208,38 @@ export class SlotMachine extends Container {
 
       setTimeout(
         () => {
-          reel.stop();
+          reel.stop().then(() => {
+            // Last reel finished
+            if (index === this.reels.length - 1) {
+              setTimeout(() => {
+                // Check wins
+                this.checkWin();
 
-          // Last reel finished
-          if (index === this.reels.length - 1) {
-            setTimeout(() => {
-              // Check wins
-              this.checkWin();
+                // Check scatter bonus
+                this.checkScatters();
 
-              // Check scatter bonus
-              this.checkScatters();
+                this.isSpinning = false;
 
-              this.isSpinning = false;
+                // Continue free spins or auto spin
+                if (
+                  this.freeSpins > 0 ||
+                  (this.autoSpin && this.autoSpinCount > 0)
+                ) {
+                  setTimeout(() => {
+                    this.spin();
+                  }, 1500);
+                } else {
+                  this.inFreeSpin = false;
 
-              // Continue free spins or auto spin
-              if (
-                this.freeSpins > 0 ||
-                (this.autoSpin && this.autoSpinCount > 0)
-              ) {
-                setTimeout(() => {
-                  this.spin();
-                }, 1500);
-              } else {
-                this.inFreeSpin = false;
+                  if (this.autoSpin) {
+                    this.autoSpin = false;
+                  }
 
-                if (this.autoSpin) {
-                  this.autoSpin = false;
+                  this.freeSpinText.text = "";
                 }
-
-                this.freeSpinText.text = "";
-              }
-            }, 250);
-          }
+              }, 250);
+            }
+          });
         },
         1200 + index * 300,
       );

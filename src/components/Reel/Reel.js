@@ -11,6 +11,8 @@ export class Reel extends Container {
     this.currentSymbols = [];
     this.spinning = false;
     this.speed = 0;
+    this.stopping = null;
+    this.stopPromise = null;
 
     for (let i = 0; i < this.rows; i++) {
       const symbol = this.randomSymbol();
@@ -44,34 +46,87 @@ export class Reel extends Container {
     ];
   }
 
-  start() {this.spinning = true; this.speed = 40;}
-  stop() {this.spinning = false;this.speed = 0;
+  start() {
+    this.spinning = true;
+    this.speed = 40;
+  }
 
-    // Force perfect alignment
-    this.sprites.forEach((sprite, index) => {
-      sprite.y = index * this.symbolHeight;
-      this.slotBorders[index].y = sprite.y;
-    });
+  stop() {
+    if (!this.spinning) return Promise.resolve();
+    if (this.stopping) return this.stopPromise;
 
-    this.currentSymbols = this.sprites.map((sprite) => {
-      const symbol = this.randomSymbol();
-      sprite.texture = Texture.from(symbol.texture);
-      return symbol;
+    const cycleLength = this.symbolHeight * this.rows;
+    const phase = ((this.sprites[0].y % this.symbolHeight) + this.symbolHeight)
+      % this.symbolHeight;
+    const stopDistance =
+      this.symbolHeight * 6 + ((this.symbolHeight - phase) % this.symbolHeight);
+    const duration = (2 * stopDistance) / this.speed;
+
+    this.stopPromise = new Promise((resolve) => {
+      this.stopping = {
+        elapsed: 0,
+        duration,
+        distance: stopDistance,
+        resolve,
+      };
     });
+    return this.stopPromise;
   }
 
   update(delta) {
     if (!this.spinning) return;
-    
-    this.sprites.forEach((sprite, index) => {
-      sprite.y += this.speed * delta;
 
-      if (sprite.y >= this.symbolHeight * this.rows) {
-        sprite.y -= this.symbolHeight * this.rows;
+    let movement = this.speed * delta;
+    if (this.stopping) {
+      const stop = this.stopping;
+      const previousProgress = stop.elapsed / stop.duration;
+      stop.elapsed = Math.min(stop.elapsed + delta, stop.duration);
+      const progress = stop.elapsed / stop.duration;
+      const previousDistance = stop.distance * (2 * previousProgress - previousProgress ** 2);
+      const currentDistance = stop.distance * (2 * progress - progress ** 2);
+      movement = currentDistance - previousDistance;
+    }
+
+    const cycleLength = this.symbolHeight * this.rows;
+    this.sprites.forEach((sprite, index) => {
+      sprite.y += movement;
+      if (sprite.y >= cycleLength) {
+        sprite.y %= cycleLength;
         const symbol = this.randomSymbol();
         sprite.texture = Texture.from(symbol.texture);
       }
       this.slotBorders[index].y = sprite.y;
     });
+
+    if (this.stopping && this.stopping.elapsed >= this.stopping.duration) {
+      const stop = this.stopping;
+      const slots = this.sprites
+        .map((sprite, index) => ({
+          sprite,
+          border: this.slotBorders[index],
+          y: sprite.y % cycleLength,
+        }))
+        .sort((a, b) => a.y - b.y);
+
+      this.sprites = slots.map(({ sprite }, index) => {
+        sprite.y = index * this.symbolHeight;
+        return sprite;
+      });
+      this.slotBorders = slots.map(({ border }, index) => {
+        border.y = index * this.symbolHeight;
+        return border;
+      });
+      this.currentSymbols = this.sprites.map((sprite) => {
+        const symbol = this.randomSymbol();
+        sprite.texture = Texture.from(symbol.texture);
+        return symbol;
+      });
+
+      this.spinning = false;
+      this.speed = 0;
+      this.stopping = null;
+      this.stopPromise = null;
+      stop.resolve();
+    }
   }
 }
