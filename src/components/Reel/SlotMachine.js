@@ -20,11 +20,13 @@ export class SlotMachine extends Container {
       text: "",
       style: new TextStyle({
         fill: "#FFD700",
-        fontSize: 24,
+        fontSize: 14,
         fontWeight: "bold",
       }),
     });
-    this.freeSpinText.y = 390;
+    this.freeSpinText.anchor.set(0.5);
+    this.freeSpinText.x = 300;
+    this.freeSpinText.y = 427;
     this.addChild(this.freeSpinText);
     this.paylines = [
       // Straight lines
@@ -53,29 +55,61 @@ export class SlotMachine extends Container {
     this.x = (app.screen.width - 600) / 2;
     this.y = 80;
     const creditPanel = new Graphics();
-    creditPanel.roundRect(0, 388, 600, 54, 14)
+    creditPanel.roundRect(0, 375, 600, 68, 14)
       .fill({ color: 0x09111d, alpha: 0.96 })
       .stroke({ width: 2, color: 0x34d6c5, alpha: 0.85 });
-    creditPanel.roundRect(5, 393, 590, 44, 10)
+    creditPanel.roundRect(5, 380, 590, 58, 10)
       .stroke({ width: 1, color: 0xe7b75a, alpha: 0.55 });
     this.addChild(creditPanel);
 
     this.creditText = new Text({
-      text: `Credits: ${this.credits}`,
+      text: "",
       style: new TextStyle({
         fill: 0xffd778,
         fontFamily: "Arial",
-        fontSize: 23,
+        fontSize: 19,
         fontWeight: "bold",
         letterSpacing: 1,
         stroke: { color: 0x392914, width: 3 },
         dropShadow: { color: 0xf19b35, blur: 8, distance: 0, alpha: 0.4 },
       }),
     });
-    this.creditText.anchor.set(0.5);
-    this.creditText.x = 300;
-    this.creditText.y = 415;
+    this.creditText.anchor.set(0, 0.5);
+    this.creditText.x = 20;
+    this.creditText.y = 411;
     this.addChild(this.creditText);
+
+    this.freeSpinsCountText = new Text({
+      text: "",
+      style: new TextStyle({
+        fill: 0x7dded3,
+        fontFamily: "Arial",
+        fontSize: 19,
+        fontWeight: "bold",
+        letterSpacing: 1,
+        stroke: { color: 0x123a3a, width: 3 },
+      }),
+    });
+    this.freeSpinsCountText.anchor.set(1, 0.5);
+    this.freeSpinsCountText.x = 580;
+    this.freeSpinsCountText.y = 411;
+    this.addChild(this.freeSpinsCountText);
+
+    this.winAmountText = new Text({
+      text: "",
+      style: new TextStyle({
+        fill: 0xffd778,
+        fontFamily: "Arial",
+        fontSize: 15,
+        fontWeight: "bold",
+        letterSpacing: 1,
+      }),
+    });
+    this.winAmountText.anchor.set(0.5);
+    this.winAmountText.x = 300;
+    this.winAmountText.y = 407;
+    this.addChild(this.winAmountText);
+    this.updateCreditDisplay();
     this.createSpinButton();
     this.createPaytableButton();
     this.createAutoSpinButton();
@@ -135,6 +169,11 @@ export class SlotMachine extends Container {
     this.winGreeting.y = -4 - Math.min(elapsed / 1000, 1) * 18;
     this.winGreeting.rotation = Math.sin(elapsed / 130) * 0.06;
     this.winGreeting.alpha = fade;
+  }
+  updateCreditDisplay(winAmount = 0) {
+    this.creditText.text = `CREDITS: ${this.credits}`;
+    this.freeSpinsCountText.text = `FREE SPINS: ${this.freeSpins}`;
+    this.winAmountText.text = winAmount > 0 ? `WIN +${winAmount}` : "";
   }
   createButton({ x, width, label, colors, onClick, isActive = () => false }) {
     const button = new Graphics();
@@ -267,8 +306,6 @@ export class SlotMachine extends Container {
       this.inFreeSpin = true;
 
       this.freeSpins--;
-
-      this.freeSpinText.text = `FREE SPINS LEFT: ${this.freeSpins}`;
     }
     // NORMAL SPIN
     else {
@@ -280,18 +317,17 @@ export class SlotMachine extends Container {
 
         return;
       }
-
       this.credits -= 5;
-
-      this.freeSpinText.text = "";
+      this.credits -= 5;
     }
+    this.freeSpinText.text = "";
 
     // Count auto spins only for paid spins
     if (this.autoSpin && !this.inFreeSpin) {
       this.autoSpinCount--;
     }
 
-    this.creditText.text = `Credits: ${this.credits}`;
+    this.updateCreditDisplay();
 
     this.winLines.clear();
 
@@ -362,6 +398,7 @@ export class SlotMachine extends Container {
     }
     if (awarded > 0) {
       this.freeSpins += awarded;
+      this.updateCreditDisplay();
       this.freeSpinText.text = `🎉 ${scatters} SCATTERS +${awarded} FREE SPINS`;
       return true;
     }
@@ -382,7 +419,7 @@ export class SlotMachine extends Container {
     }
     if (win > 0) {
       this.credits += win;
-      this.creditText.text = `WIN +${win} Credits:${this.credits}`;
+      this.updateCreditDisplay(win);
       this.showWinGreeting();
       this.onWin(win);
     }
