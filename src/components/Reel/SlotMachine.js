@@ -2,10 +2,11 @@ import { Container, Graphics, Text, TextStyle } from "pixi.js";
 import { Reel } from "./Reel";
 import { Paytable } from "./Paytable";
 export class SlotMachine extends Container {
-  constructor(app, symbols) {
+  constructor(app, symbols, onWin = () => {}) {
     super();
     this.app = app;
     this.symbols = symbols;
+    this.onWin = onWin;
     this.credits = 100;
     this.isSpinning = false;
     this.reels = [];
@@ -287,6 +288,7 @@ export class SlotMachine extends Container {
     if (win > 0) {
       this.credits += win;
       this.creditText.text = `WIN +${win} Credits:${this.credits}`;
+      this.onWin();
     }
   }
   checkLine(line) {

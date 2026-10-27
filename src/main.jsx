@@ -3,8 +3,12 @@ import { SlotMachine } from "./components/Reel/SlotMachine";
 import { symbols } from "./objects/objects";
 
 export class SlotFrame extends Container {
-  constructor() {
+  constructor(app) {
     super();
+    this.currencySymbols = [];
+    this.currencyHighlightDuration = 2000;
+    this.currencyHighlightElapsed = 0;
+    this.isCurrencyHighlighted = false;
 
     const backdrop = new Graphics();
     backdrop.rect(0, 0, 1060, 800).fill(0x070b16);
@@ -40,7 +44,9 @@ export class SlotFrame extends Container {
       symbol.x = x;
       symbol.y = y;
       this.addChild(symbol);
+      this.currencySymbols.push(symbol);
     });
+    app.ticker.add((ticker) => this.updateCurrencyHighlight(ticker.deltaMS));
 
     const cabinet = new Graphics();
     cabinet.roundRect(173, 112, 714, 488, 28)
@@ -118,6 +124,29 @@ export class SlotFrame extends Container {
     this.addChild(footer);
   }
 
+  highlightCurrency() {
+    this.currencyHighlightElapsed = 0;
+    this.isCurrencyHighlighted = true;
+  }
+
+  updateCurrencyHighlight(deltaMS) {
+    if (!this.isCurrencyHighlighted) return;
+
+    this.currencyHighlightElapsed += deltaMS;
+    if (this.currencyHighlightElapsed >= this.currencyHighlightDuration) {
+      this.isCurrencyHighlighted = false;
+      this.currencySymbols.forEach((text) => {
+        text.alpha = 0.25;
+      });
+      return;
+    }
+
+    const pulse = (Math.sin(this.currencyHighlightElapsed / 110) + 1) / 2;
+    this.currencySymbols.forEach((text) => {
+      text.alpha = 0.55 + pulse * 0.45;
+    });
+  }
+
   addCoinBadge(x, symbol, color) {
     const badge = new Graphics();
     badge.circle(0, 0, 25).fill(0x172233).stroke({ width: 2, color });
@@ -150,8 +179,8 @@ async function init() {
 
   document.getElementById("root").appendChild(app.canvas);
   await Assets.load(symbols.map((symbol) => symbol.texture));
-  const slotMachine = new SlotMachine(app, symbols);
-  const frame = new SlotFrame();
+  const frame = new SlotFrame(app);
+  const slotMachine = new SlotMachine(app, symbols, () => frame.highlightCurrency());
   frame.x = 0;
   frame.y = 0;
   slotMachine.y = 140;
