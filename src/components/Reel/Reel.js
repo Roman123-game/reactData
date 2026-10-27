@@ -4,7 +4,8 @@ export class Reel extends Container {
   constructor(symbols) {
     super();
     this.availableSymbols = symbols;
-    this.rows = 3;
+    this.rows = 4;
+    this.visibleRows = 3;
     this.symbolHeight = 120;
     this.sprites = [];
     this.slotBorders = [];
@@ -19,7 +20,7 @@ export class Reel extends Container {
       const sprite = new Sprite(Texture.from(symbol.texture));
       sprite.width = 120;
       sprite.height = 120;
-      sprite.y = i * this.symbolHeight;
+      sprite.y = (i - 1) * this.symbolHeight;
       this.addChild(sprite);
       this.sprites.push(sprite);
       this.currentSymbols.push(symbol);
@@ -31,10 +32,11 @@ export class Reel extends Container {
       this.addChild(slotBorder);
       this.slotBorders.push(slotBorder);
     }
+    this.currentSymbols = this.currentSymbols.slice(1);
 
     // Window mask
     const mask = new Graphics();
-    mask.rect(0, 0, 120, 360);
+    mask.rect(0, 0, 120, this.visibleRows * this.symbolHeight);
     mask.fill(0xffffff);
     this.addChild(mask);
     this.mask = mask;
@@ -87,10 +89,11 @@ export class Reel extends Container {
     }
 
     const cycleLength = this.symbolHeight * this.rows;
+    const wrapPosition = this.symbolHeight * this.visibleRows;
     this.sprites.forEach((sprite, index) => {
       sprite.y += movement;
-      if (sprite.y >= cycleLength) {
-        sprite.y %= cycleLength;
+      if (sprite.y >= wrapPosition) {
+        sprite.y -= cycleLength;
         const symbol = this.randomSymbol();
         sprite.texture = Texture.from(symbol.texture);
       }
@@ -103,23 +106,25 @@ export class Reel extends Container {
         .map((sprite, index) => ({
           sprite,
           border: this.slotBorders[index],
-          y: sprite.y % cycleLength,
+          y: sprite.y,
         }))
         .sort((a, b) => a.y - b.y);
 
       this.sprites = slots.map(({ sprite }, index) => {
-        sprite.y = index * this.symbolHeight;
+        sprite.y = (index - 1) * this.symbolHeight;
         return sprite;
       });
       this.slotBorders = slots.map(({ border }, index) => {
-        border.y = index * this.symbolHeight;
+        border.y = (index - 1) * this.symbolHeight;
         return border;
       });
-      this.currentSymbols = this.sprites.map((sprite) => {
-        const symbol = this.randomSymbol();
-        sprite.texture = Texture.from(symbol.texture);
-        return symbol;
-      });
+      this.currentSymbols = this.sprites
+        .slice(1, this.visibleRows + 1)
+        .map((sprite) => {
+          const symbol = this.randomSymbol();
+          sprite.texture = Texture.from(symbol.texture);
+          return symbol;
+        });
 
       this.spinning = false;
       this.speed = 0;
