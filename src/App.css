@@ -1,5 +1,5 @@
 #root {
-  width: min(100vw, 100vh, 800px);
+  width: min(100vw, 132.5vh, 1060px);
   max-height: 100vh;
   margin: 0 auto;
 }
