@@ -129,7 +129,7 @@ export class SlotFrame extends Container {
   highlightCurrency(winAmount) {
     this.currencyHighlightElapsed = 0;
     this.isCurrencyHighlighted = true;
-    this.highlightAllCurrencies = winAmount > 100;
+    this.highlightAllCurrencies = winAmount > 50;
     this.highlightedCurrencyIndex = this.highlightAllCurrencies
       ? -1
       : Math.floor(Math.random() * this.currencySymbols.length);
