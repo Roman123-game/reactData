@@ -8,6 +8,7 @@ export class Reel extends Container {
     this.visibleRows = 3;
     this.symbolHeight = 120;
     this.sprites = [];
+    this.spriteSymbols = [];
     this.slotBorders = [];
     this.currentSymbols = [];
     this.spinning = false;
@@ -23,7 +24,7 @@ export class Reel extends Container {
       sprite.y = (i - 1) * this.symbolHeight;
       this.addChild(sprite);
       this.sprites.push(sprite);
-      this.currentSymbols.push(symbol);
+      this.spriteSymbols.push(symbol);
 
       const slotBorder = new Graphics();
       slotBorder.roundRect(2, 2, 116, 116, 8)
@@ -32,7 +33,7 @@ export class Reel extends Container {
       this.addChild(slotBorder);
       this.slotBorders.push(slotBorder);
     }
-    this.currentSymbols = this.currentSymbols.slice(1);
+    this.currentSymbols = this.spriteSymbols.slice(1);
 
     // Window mask
     const mask = new Graphics();
@@ -96,6 +97,7 @@ export class Reel extends Container {
         sprite.y -= cycleLength;
         const symbol = this.randomSymbol();
         sprite.texture = Texture.from(symbol.texture);
+        this.spriteSymbols[index] = symbol;
       }
       this.slotBorders[index].y = sprite.y;
     });
@@ -105,6 +107,7 @@ export class Reel extends Container {
       const slots = this.sprites
         .map((sprite, index) => ({
           sprite,
+          symbol: this.spriteSymbols[index],
           border: this.slotBorders[index],
           y: sprite.y,
         }))
@@ -114,17 +117,12 @@ export class Reel extends Container {
         sprite.y = (index - 1) * this.symbolHeight;
         return sprite;
       });
+      this.spriteSymbols = slots.map(({ symbol }) => symbol);
       this.slotBorders = slots.map(({ border }, index) => {
         border.y = (index - 1) * this.symbolHeight;
         return border;
       });
-      this.currentSymbols = this.sprites
-        .slice(1, this.visibleRows + 1)
-        .map((sprite) => {
-          const symbol = this.randomSymbol();
-          sprite.texture = Texture.from(symbol.texture);
-          return symbol;
-        });
+      this.currentSymbols = this.spriteSymbols.slice(1, this.visibleRows + 1);
 
       this.spinning = false;
       this.speed = 0;
