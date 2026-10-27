@@ -109,25 +109,49 @@ WINS PAY LEFT → RIGHT`,
     // =========================
     // Close Button
     // =========================
-    const close = new Graphics()
-      .roundRect(0,0,170,55,12)
-      .fill(0xaa2222);
+    const close = new Graphics();
     close.x = 215;
     close.y = 650;
     close.eventMode = "static";
     close.cursor = "pointer";
     const closeText = new Text({
-      text:"CLOSE",
-      style:new TextStyle({
-        fill:"white",
-        fontSize:24
-      })
+      text: "CLOSE",
+      style: new TextStyle({
+        fill: 0xffffff,
+        fontFamily: "Arial",
+        fontSize: 20,
+        fontWeight: "bold",
+        letterSpacing: 1.5,
+        dropShadow: { color: 0x07121b, blur: 2, distance: 1, alpha: 0.8 },
+      }),
     });
     closeText.anchor.set(0.5);
     closeText.x = 85;
-    closeText.y = 27;
+    const drawCloseButton = (state) => {
+      const offset = state === "pressed" ? 5 : 0;
+      close.clear();
+      close.roundRect(0, 8, 170, 55, 12)
+        .fill({ color: 0x050a12, alpha: 0.72 });
+      close.roundRect(0, 4 + offset, 170, 55, 12)
+        .fill(0x111d2a)
+        .stroke({ width: 2, color: 0xf36a72, alpha: 0.9 });
+      close.roundRect(3, 2 + offset, 164, 47, 9)
+        .fill(state === "hover" ? 0xc34655 : 0x9d3542)
+        .stroke({ width: 1, color: 0xffffff, alpha: 0.3 });
+      close.roundRect(8, 6 + offset, 154, 8, 4)
+        .fill({ color: 0xffffff, alpha: state === "hover" ? 0.3 : 0.18 });
+      closeText.y = 26 + offset;
+    };
+    drawCloseButton("idle");
     close.addChild(closeText);
-    close.on("pointerdown",()=>{this.visible = false});
+    close.on("pointerover", () => drawCloseButton("hover"));
+    close.on("pointerout", () => drawCloseButton("idle"));
+    close.on("pointerdown", () => {
+      drawCloseButton("pressed");
+      this.visible = false;
+    });
+    close.on("pointerup", () => drawCloseButton("hover"));
+    close.on("pointerupoutside", () => drawCloseButton("idle"));
     this.addChild(close);
   }
   toggle(){ this.visible = !this.visible};
