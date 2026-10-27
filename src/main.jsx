@@ -18,7 +18,7 @@ export class SlotFrame extends Container {
 
     this.addChild(backdrop);
 
-    const backgroundSymbols = ["₿", "Ξ", "₮", "◇", "◎", "◆"];
+    const backgroundSymbols = ["₿", "Ξ", "₮", "Ł", "$", "€", "£", "¥"];
     const symbolColors = [0xf2a900, 0x9aabff, 0x26a17b, 0x34d6c5];
     const symbolPositions = [
       [76, 182], [142, 274], [82, 378], [142, 482], [78, 570], [136, 728],
