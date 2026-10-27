@@ -1,4 +1,4 @@
-import { Container, Sprite, Texture, Graphics } from "pixi.js";
+import { BlurFilter, Container, Sprite, Texture, Graphics } from "pixi.js";
 
 export class Reel extends Container {
   constructor(symbols) {
@@ -15,6 +15,10 @@ export class Reel extends Container {
     this.speed = 0;
     this.stopping = null;
     this.stopPromise = null;
+    this.blur = new BlurFilter();
+    this.blur.blurX = 0;
+    this.blur.blurY = 0;
+    this.filters = [this.blur];
 
     for (let i = 0; i < this.rows; i++) {
       const symbol = this.randomSymbol();
@@ -88,6 +92,10 @@ export class Reel extends Container {
       const currentDistance = stop.distance * (2 * progress - progress ** 2);
       movement = currentDistance - previousDistance;
     }
+    this.blur.blurY = Math.min(
+      (movement / Math.max(delta, 0.001)) * 0.2,
+      20,
+    );
 
     const cycleLength = this.symbolHeight * this.rows;
     const wrapPosition = this.symbolHeight * this.visibleRows;
@@ -122,6 +130,7 @@ export class Reel extends Container {
 
       this.spinning = false;
       this.speed = 0;
+      this.blur.blurY = 0;
       this.stopping = null;
       this.stopPromise = null;
       stop.resolve();

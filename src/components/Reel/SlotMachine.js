@@ -372,7 +372,7 @@ export class SlotMachine extends Container {
             }
           });
         },
-        1200 + index * 300,
+        1900 + index * 600,
       );
     });
   }
