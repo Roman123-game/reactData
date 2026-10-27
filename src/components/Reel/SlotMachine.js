@@ -52,15 +52,29 @@ export class SlotMachine extends Container {
     this.addChild(this.winLines);
     this.x = (app.screen.width - 600) / 2;
     this.y = 80;
-    // Credits
+    const creditPanel = new Graphics();
+    creditPanel.roundRect(0, 388, 600, 54, 14)
+      .fill({ color: 0x09111d, alpha: 0.96 })
+      .stroke({ width: 2, color: 0x34d6c5, alpha: 0.85 });
+    creditPanel.roundRect(5, 393, 590, 44, 10)
+      .stroke({ width: 1, color: 0xe7b75a, alpha: 0.55 });
+    this.addChild(creditPanel);
+
     this.creditText = new Text({
       text: `Credits: ${this.credits}`,
       style: new TextStyle({
-        fill: "white",
-        fontSize: 28,
+        fill: 0xffd778,
+        fontFamily: "Arial",
+        fontSize: 23,
+        fontWeight: "bold",
+        letterSpacing: 1,
+        stroke: { color: 0x392914, width: 3 },
+        dropShadow: { color: 0xf19b35, blur: 8, distance: 0, alpha: 0.4 },
       }),
     });
-    this.creditText.y = 420;
+    this.creditText.anchor.set(0.5);
+    this.creditText.x = 300;
+    this.creditText.y = 415;
     this.addChild(this.creditText);
     this.createSpinButton();
     this.createPaytableButton();
