@@ -288,7 +288,7 @@ export class SlotMachine extends Container {
     if (win > 0) {
       this.credits += win;
       this.creditText.text = `WIN +${win} Credits:${this.credits}`;
-      this.onWin();
+      this.onWin(win);
     }
   }
   checkLine(line) {

@@ -9,6 +9,8 @@ export class SlotFrame extends Container {
     this.currencyHighlightDuration = 2000;
     this.currencyHighlightElapsed = 0;
     this.isCurrencyHighlighted = false;
+    this.highlightAllCurrencies = false;
+    this.highlightedCurrencyIndex = -1;
 
     const backdrop = new Graphics();
     backdrop.rect(0, 0, 1060, 800).fill(0x070b16);
@@ -124,9 +126,13 @@ export class SlotFrame extends Container {
     this.addChild(footer);
   }
 
-  highlightCurrency() {
+  highlightCurrency(winAmount) {
     this.currencyHighlightElapsed = 0;
     this.isCurrencyHighlighted = true;
+    this.highlightAllCurrencies = winAmount > 100;
+    this.highlightedCurrencyIndex = this.highlightAllCurrencies
+      ? -1
+      : Math.floor(Math.random() * this.currencySymbols.length);
   }
 
   updateCurrencyHighlight(deltaMS) {
@@ -142,8 +148,10 @@ export class SlotFrame extends Container {
     }
 
     const pulse = (Math.sin(this.currencyHighlightElapsed / 110) + 1) / 2;
-    this.currencySymbols.forEach((text) => {
-      text.alpha = 0.55 + pulse * 0.45;
+    this.currencySymbols.forEach((text, index) => {
+      const shouldHighlight =
+        this.highlightAllCurrencies || index === this.highlightedCurrencyIndex;
+      text.alpha = shouldHighlight ? 0.55 + pulse * 0.45 : 0.25;
     });
   }
 
@@ -180,7 +188,9 @@ async function init() {
   document.getElementById("root").appendChild(app.canvas);
   await Assets.load(symbols.map((symbol) => symbol.texture));
   const frame = new SlotFrame(app);
-  const slotMachine = new SlotMachine(app, symbols, () => frame.highlightCurrency());
+  const slotMachine = new SlotMachine(app, symbols, (winAmount) =>
+    frame.highlightCurrency(winAmount),
+  );
   frame.x = 0;
   frame.y = 0;
   slotMachine.y = 140;
