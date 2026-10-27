@@ -137,17 +137,23 @@ export class SlotFrame extends Container {
     this.highlightedCurrencyIndex = this.highlightAllCurrencies
       ? -1
       : Math.floor(Math.random() * this.currencySymbols.length);
-    this.shootConfetti();
+    if (this.highlightAllCurrencies) {
+      for (let burst = 0; burst < 3; burst++) {
+        setTimeout(() => this.shootConfetti(64), burst * 300);
+      }
+    } else {
+      this.shootConfetti();
+    }
   }
 
-  shootConfetti() {
+  shootConfetti(particlesPerCorner = 32) {
     const corners = [
       [18, 782],
       [1042, 782],
     ];
 
     corners.forEach(([startX, startY]) => {
-      for (let i = 0; i < 32; i++) {
+      for (let i = 0; i < particlesPerCorner; i++) {
         const width = 5 + Math.random() * 8;
         const height = 7 + Math.random() * 12;
         const particle = new Graphics();
