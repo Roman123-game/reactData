@@ -154,8 +154,8 @@ export class SlotFrame extends Container {
 
     corners.forEach(([startX, startY]) => {
       for (let i = 0; i < particlesPerCorner; i++) {
-        const width = 5 + Math.random() * 8;
-        const height = 7 + Math.random() * 12;
+        const width = 20 + Math.random() * 24;
+        const height = 28 + Math.random() * 36;
         const particle = new Graphics();
         const shape = Math.floor(Math.random() * 3);
         const color = this.confettiColors[
@@ -165,7 +165,7 @@ export class SlotFrame extends Container {
         if (shape === 0) {
           particle.rect(-width / 2, -height / 2, width, height).fill(color);
         } else if (shape === 1) {
-          particle.roundRect(-width / 2, -height / 2, width, height, 2).fill(color);
+          particle.roundRect(-width / 2, -height / 2, width, height, 6).fill(color);
         } else {
           particle
             .moveTo(0, -height / 2)
