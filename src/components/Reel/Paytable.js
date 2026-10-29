@@ -1,4 +1,4 @@
-import { Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
+import { Circle, Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
 export class Paytable extends Container {
   constructor(symbols) {
     super();
@@ -17,7 +17,7 @@ export class Paytable extends Container {
     // Title
     // =========================
     const title = new Text({
-      text: "PAYTABLE",
+      text: "Reward",
       style: new TextStyle({
         fill: 0xffd700,
         fontSize: 22,
@@ -110,37 +110,37 @@ WINS PAY LEFT → RIGHT`,
     // Close Button
     // =========================
     const close = new Graphics();
-    close.x = 215;
-    close.y = 650;
+    close.x = 262;
+    close.y = 610;
     close.eventMode = "static";
     close.cursor = "pointer";
+    close.hitArea = new Circle(38, 46, 38);
     const closeText = new Text({
       text: "CLOSE",
       style: new TextStyle({
         fill: 0xffffff,
         fontFamily: "Arial",
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: "bold",
-        letterSpacing: 1.5,
+        letterSpacing: 1,
         dropShadow: { color: 0x07121b, blur: 2, distance: 1, alpha: 0.8 },
       }),
     });
     closeText.anchor.set(0.5);
-    closeText.x = 85;
+    closeText.x = 38;
+    closeText.y = 38;
     const drawCloseButton = (state) => {
       const offset = state === "pressed" ? 5 : 0;
       close.clear();
-      close.roundRect(0, 8, 170, 55, 12)
+      close.circle(38, 46, 38)
         .fill({ color: 0x050a12, alpha: 0.72 });
-      close.roundRect(0, 4 + offset, 170, 55, 12)
+      close.circle(38, 42 + offset, 36)
         .fill(0x111d2a)
         .stroke({ width: 2, color: 0xf36a72, alpha: 0.9 });
-      close.roundRect(3, 2 + offset, 164, 47, 9)
+      close.circle(38, 38 + offset, 30)
         .fill(state === "hover" ? 0xc34655 : 0x9d3542)
         .stroke({ width: 1, color: 0xffffff, alpha: 0.3 });
-      close.roundRect(8, 6 + offset, 154, 8, 4)
-        .fill({ color: 0xffffff, alpha: state === "hover" ? 0.3 : 0.18 });
-      closeText.y = 26 + offset;
+      closeText.y = 38 + offset;
     };
     drawCloseButton("idle");
     close.addChild(closeText);

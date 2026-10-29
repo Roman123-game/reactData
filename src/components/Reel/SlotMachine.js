@@ -1,4 +1,4 @@
-import { Container, Graphics, Text, TextStyle } from "pixi.js";
+import { Circle, Container, Graphics, Text, TextStyle } from "pixi.js";
 import { Reel } from "./Reel";
 import { Paytable } from "./Paytable";
 export class SlotMachine extends Container {
@@ -182,7 +182,7 @@ export class SlotMachine extends Container {
       style: new TextStyle({
         fill: 0xffffff,
         fontFamily: "Arial",
-        fontSize: 20,
+        fontSize: label === "PAYTABLE" ? 11 : 15,
         fontWeight: "bold",
         letterSpacing: 1.5,
         dropShadow: { color: 0x07121b, blur: 2, distance: 1, alpha: 0.8 },
@@ -190,28 +190,30 @@ export class SlotMachine extends Container {
     });
 
     text.anchor.set(0.5);
-    text.x = x + width / 2;
-    text.y = 28;
-    button.y = 490;
+    const centerX = x + width / 2;
+    const centerY = width / 2;
+    const radius = width / 2;
+    text.x = centerX;
+    text.y = centerY;
+    button.y = 474;
     button.eventMode = "static";
     button.cursor = "pointer";
+    button.hitArea = new Circle(centerX, centerY + 8, radius);
 
     const draw = (state) => {
       const faceColor =
         state === "hover" ? colors.hover : state === "active" ? colors.active : colors.face;
       const offset = state === "pressed" ? 5 : state === "active" ? 4 : 0;
       button.clear();
-      button.roundRect(x, 8, width, 56, 15)
+      button.circle(centerX, centerY + 8, radius)
         .fill({ color: 0x050a12, alpha: 0.72 });
-      button.roundRect(x, 4 + offset, width, 56, 15)
+      button.circle(centerX, centerY + 4 + offset, radius - 2)
         .fill(0x111d2a)
         .stroke({ width: 2, color: colors.border, alpha: 0.9 });
-      button.roundRect(x + 3, 2 + offset, width - 6, 48, 12)
+      button.circle(centerX, centerY + offset, radius - 8)
         .fill(faceColor)
         .stroke({ width: 1, color: 0xffffff, alpha: 0.3 });
-      button.roundRect(x + 8, 6 + offset, width - 16, 8, 4)
-        .fill({ color: 0xffffff, alpha: state === "hover" ? 0.3 : 0.18 });
-      text.y = 26 + offset;
+      text.y = centerY + offset;
     };
 
     draw("idle");
@@ -230,8 +232,8 @@ export class SlotMachine extends Container {
   }
   createAutoSpinButton() {
     this.autoSpinButton = this.createButton({
-      x: 484,
-      width: 140,
+      x: 482,
+      width: 76,
       label: "AUTO",
       colors: {
         face: 0x9d3542,
@@ -275,8 +277,8 @@ export class SlotMachine extends Container {
   }
   createSpinButton() {
     this.createButton({
-      x: -24,
-      width: 200,
+      x: 42,
+      width: 76,
       label: "SPIN",
       colors: { face: 0x16866e, hover: 0x1da88a, border: 0x4fe0bb },
       onClick: () => this.spin(),
@@ -284,9 +286,9 @@ export class SlotMachine extends Container {
   }
   createPaytableButton() {
     this.createButton({
-      x: 220,
-      width: 200,
-      label: "PAYTABLE",
+      x: 262,
+      width: 76,
+      label: "Reward",
       colors: { face: 0x285c9c, hover: 0x3479bd, border: 0x74b9ed },
       onClick: () => this.paytable.toggle(),
     });
