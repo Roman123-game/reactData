@@ -154,7 +154,7 @@ export class SlotFrame extends Container {
 
     sides.forEach(([minTargetX, maxTargetX]) => {
       for (let i = 0; i < particlesPerSide; i++) {
-        const radius = 12 + Math.random() * 18;
+        const radius = 30 + Math.random() * 36;
         const particle = new Graphics();
         const color = this.confettiColors[
           Math.floor(Math.random() * this.confettiColors.length)
