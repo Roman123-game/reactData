@@ -146,15 +146,15 @@ export class SlotFrame extends Container {
     }
   }
 
-  shootConfetti(particlesPerCorner = 32) {
-    const corners = [
-      [18, 782],
-      [1042, 782],
+  shootConfetti(particlesPerSide = 32) {
+    const sides = [
+      [0, 140],
+      [920, 1060],
     ];
 
-    corners.forEach(([startX, startY]) => {
-      for (let i = 0; i < particlesPerCorner; i++) {
-        const radius = 30 + Math.random() * 36;
+    sides.forEach(([minTargetX, maxTargetX]) => {
+      for (let i = 0; i < particlesPerSide; i++) {
+        const radius = 12 + Math.random() * 18;
         const particle = new Graphics();
         const color = this.confettiColors[
           Math.floor(Math.random() * this.confettiColors.length)
@@ -162,10 +162,10 @@ export class SlotFrame extends Container {
 
         particle.circle(0, 0, radius).fill(color);
 
-        const originX = startX + (Math.random() - 0.5) * 24;
-        const originY = startY + Math.random() * 18;
-        const targetX = 530 + (Math.random() - 0.5) * 300;
-        const targetY = 220 + Math.random() * 80;
+        const originX = 530 + (Math.random() - 0.5) * 24;
+        const originY = 782 + Math.random() * 18;
+        const targetX = minTargetX + Math.random() * (maxTargetX - minTargetX);
+        const targetY = 180 + Math.random() * 140;
         const targetScale = 0.3 + Math.random() * 0.7;
         const gravity = 0.0015 + Math.random() * 0.001;
         const flightDuration = Math.sqrt(
