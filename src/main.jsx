@@ -13,7 +13,7 @@ export class SlotFrame extends Container {
     this.highlightedCurrencyIndex = -1;
     this.confettiLayer = new Container();
     this.confettiParticles = [];
-    this.confettiColors = [0xffd778, 0x34d6c5, 0x9aabff, 0xff6b8a, 0x808080];
+    this.confettiColors = [0xffd778, 0x34d6c5, 0x9aabff, 0xff6b8a, 0x8b5cf6];
     app.ticker.add((ticker) => this.updateConfetti(ticker.deltaMS));
 
     const backdrop = new Graphics();
