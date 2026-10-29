@@ -66,13 +66,17 @@ export class Reel extends Container {
       % this.symbolHeight;
     const stopDistance =
       this.symbolHeight * 6 + ((this.symbolHeight - phase) % this.symbolHeight);
-    const duration = (2 * stopDistance) / this.speed;
+    const overshootDistance = this.symbolHeight * 0.1;
+    const distance = stopDistance + overshootDistance;
+    const duration = (2 * distance) / this.speed;
 
     this.stopPromise = new Promise((resolve) => {
       this.stopping = {
         elapsed: 0,
         duration,
-        distance: stopDistance,
+        settleDuration: 12,
+        distance,
+        targetDistance: stopDistance,
         resolve,
       };
     });
@@ -85,11 +89,25 @@ export class Reel extends Container {
     let movement = this.speed * delta;
     if (this.stopping) {
       const stop = this.stopping;
-      const previousProgress = stop.elapsed / stop.duration;
-      stop.elapsed = Math.min(stop.elapsed + delta, stop.duration);
-      const progress = stop.elapsed / stop.duration;
-      const previousDistance = stop.distance * (2 * previousProgress - previousProgress ** 2);
-      const currentDistance = stop.distance * (2 * progress - progress ** 2);
+      const previousElapsed = stop.elapsed;
+      const totalDuration = stop.duration + stop.settleDuration;
+      stop.elapsed = Math.min(stop.elapsed + delta, totalDuration);
+      const distanceAt = (elapsed) => {
+        if (elapsed <= stop.duration) {
+          const progress = elapsed / stop.duration;
+          return stop.distance * (2 * progress - progress ** 2);
+        }
+
+        const progress = Math.min(
+          (elapsed - stop.duration) / stop.settleDuration,
+          1,
+        );
+        const easedProgress = progress ** 2 * (3 - 2 * progress);
+        return stop.distance -
+          (stop.distance - stop.targetDistance) * easedProgress;
+      };
+      const previousDistance = distanceAt(previousElapsed);
+      const currentDistance = distanceAt(stop.elapsed);
       movement = currentDistance - previousDistance;
     }
     this.blur.blurY = Math.min(
@@ -108,19 +126,22 @@ export class Reel extends Container {
           sprite.texture = Texture.from(symbol.texture);
           this.spriteSymbols[index] = symbol;
         }
+      } else if (sprite.y < wrapPosition - cycleLength) {
+        sprite.y += cycleLength;
       }
       this.slotBorders[index].y = sprite.y;
     });
 
-    if (this.stopping && this.stopping.elapsed >= this.stopping.duration) {
+    if (
+      this.stopping &&
+      this.stopping.elapsed >= this.stopping.duration + this.stopping.settleDuration
+    ) {
       const stop = this.stopping;
       this.currentSymbols = Array(this.visibleRows);
       this.sprites.forEach((sprite, index) => {
         const alignedY = Math.round(sprite.y / this.symbolHeight) * this.symbolHeight;
-        if (Math.abs(sprite.y - alignedY) < 0.001) {
-          sprite.y = alignedY;
-          this.slotBorders[index].y = alignedY;
-        }
+        sprite.y = alignedY;
+        this.slotBorders[index].y = alignedY;
 
         const row = Math.round(sprite.y / this.symbolHeight);
         if (row >= 0 && row < this.visibleRows) {

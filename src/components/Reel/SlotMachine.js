@@ -291,6 +291,19 @@ export class SlotMachine extends Container {
       onClick: () => this.paytable.toggle(),
     });
   }
+  async stopReels() {
+    const stopPromises = [];
+    await new Promise((resolve) => setTimeout(resolve, 1900));
+
+    for (let index = 0; index < this.reels.length; index++) {
+      stopPromises.push(this.reels[index].stop());
+      if (index < this.reels.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+      }
+    }
+
+    await Promise.all(stopPromises);
+  }
   spin() {
     if (this.isSpinning) return;
 
@@ -332,48 +345,29 @@ export class SlotMachine extends Container {
 
     this.isSpinning = true;
 
-    // Start reels
-    this.reels.forEach((reel, index) => {
-      reel.start();
+    this.reels.forEach((reel) => reel.start());
+    this.stopReels().then(() => {
+      setTimeout(() => {
+        this.checkWin();
+        this.checkScatters();
 
-      setTimeout(
-        () => {
-          reel.stop().then(() => {
-            // Last reel finished
-            if (index === this.reels.length - 1) {
-              setTimeout(() => {
-                // Check wins
-                this.checkWin();
+        this.isSpinning = false;
 
-                // Check scatter bonus
-                this.checkScatters();
+        if (this.freeSpins > 0 || (this.autoSpin && this.autoSpinCount > 0)) {
+          setTimeout(() => {
+            this.spin();
+          }, 1500);
+        } else {
+          this.inFreeSpin = false;
 
-                this.isSpinning = false;
+          if (this.autoSpin) {
+            this.autoSpin = false;
+            this.updateAutoSpinButton();
+          }
 
-                // Continue free spins or auto spin
-                if (
-                  this.freeSpins > 0 ||
-                  (this.autoSpin && this.autoSpinCount > 0)
-                ) {
-                  setTimeout(() => {
-                    this.spin();
-                  }, 1500);
-                } else {
-                  this.inFreeSpin = false;
-
-                  if (this.autoSpin) {
-                    this.autoSpin = false;
-                    this.updateAutoSpinButton();
-                  }
-
-                  this.freeSpinText.text = "";
-                }
-              }, 250);
-            }
-          });
-        },
-        1900 + index * 600,
-      );
+          this.freeSpinText.text = "";
+        }
+      }, 250);
     });
   }
   checkScatters() {
