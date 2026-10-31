@@ -6,7 +6,7 @@ import shield from "../assets/shield.png";
 import safe from "../assets/case.png";
 import rocket from "../assets/rocket.png";
 import dog from "../assets/dog.png";
-import jackpot from "../assets/jackpot.png";
+// import jackpot from "../assets/jackpot.png";
 import vault from "../assets/vault.png";
 import gain from "../assets/gain.png";
 import wild from "../assets/wild.png";
