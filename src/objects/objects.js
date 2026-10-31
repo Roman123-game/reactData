@@ -110,12 +110,12 @@ export const symbols = [
     payout:9,
     type: "normal",
   },
-  {
-    name: "Jackpot",
-    texture: jackpot,
-    payout: 0,
-    type: "wild",
-  },
+  // {
+  //   name: "Jackpot",
+  //   texture: jackpot,
+  //   payout: 0,
+  //   type: "wild",
+  // },
   {
     name: "Vault",
     texture: vault,

@@ -31,16 +31,7 @@ export class Paytable extends Container {
     // =========================
     // Symbols - TWO COLUMNS
     // =========================
-    const positions = [
-      {
-        x: 100,
-        y: -40
-      },
-      {
-        x: 430,
-        y: -40
-      }
-    ];
+    const positions = [{x: 100,y: -40},{ x: 430,y: -40}];
     symbols.forEach((symbol,index)=>{
       const column = index % 2;
       const row = Math.floor(index / 2);
