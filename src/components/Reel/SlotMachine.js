@@ -23,6 +23,7 @@ export class SlotMachine extends Container {
     this.reelSpinStartSymbols = null;
     this.freeSpins = 0;
     this.inFreeSpin = false;
+    this.reelSpinCost = 10;
     this.autoSpin = false;
     this.autoSpinCount = 0;
     this.winGreetingElapsed = 0;
@@ -326,7 +327,7 @@ export class SlotMachine extends Container {
           this.isFullSpinInProgress ||
           this.autoSpin ||
           !this.canSpinReel ||
-          this.credits < 5 ||
+          this.credits < this.reelSpinCost ||
           this.reelSpinsInProgress.has(index);
         const faceColor = disabled
           ? 0x34434b
@@ -351,7 +352,7 @@ export class SlotMachine extends Container {
           this.isFullSpinInProgress ||
           this.autoSpin ||
           !this.canSpinReel ||
-          this.credits < 5 ||
+          this.credits < this.reelSpinCost ||
           this.reelSpinsInProgress.has(index)
         ) return;
         draw("pressed");
@@ -371,7 +372,7 @@ export class SlotMachine extends Container {
         this.isFullSpinInProgress ||
         this.autoSpin ||
         !this.canSpinReel ||
-        this.credits < 5 ||
+        this.credits < this.reelSpinCost ||
         this.reelSpinsInProgress.has(index);
       button.cursor = disabled ? "default" : "pointer";
       draw("idle");
@@ -475,7 +476,7 @@ export class SlotMachine extends Container {
       this.isFullSpinInProgress ||
       this.autoSpin ||
       !this.canSpinReel ||
-      this.credits < 5 ||
+      this.credits < this.reelSpinCost ||
       this.reelSpinsInProgress.has(index)
     ) return;
 
@@ -489,7 +490,7 @@ export class SlotMachine extends Container {
     }
     this.canSpinReel = false;
     this.reelSpinsInProgress.add(index);
-    this.credits -= 5;
+    this.credits -= this.reelSpinCost;
     this.updateCreditDisplay();
     this.updateReelSpinButtons();
     reel.start();
