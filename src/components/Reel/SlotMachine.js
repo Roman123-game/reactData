@@ -65,10 +65,10 @@ export class SlotMachine extends Container {
     this.x = (app.screen.width - 600) / 2;
     this.y = 80;
     const creditPanel = new Graphics();
-    creditPanel.roundRect(0, 400, 600, 68, 14)
+    creditPanel.roundRect(0, 396, 600, 42, 12)
       .fill({ color: 0x09111d, alpha: 0.96 })
       .stroke({ width: 2, color: 0x34d6c5, alpha: 0.85 });
-    creditPanel.roundRect(5, 405, 590, 58, 10)
+    creditPanel.roundRect(5, 401, 590, 32, 8)
       .stroke({ width: 1, color: 0xe7b75a, alpha: 0.55 });
     this.addChild(creditPanel);
 
@@ -77,16 +77,16 @@ export class SlotMachine extends Container {
       style: new TextStyle({
         fill: 0xffd778,
         fontFamily: "Arial",
-        fontSize: 19,
+        fontSize: 16,
         fontWeight: "bold",
         letterSpacing: 1,
-        stroke: { color: 0x392914, width: 3 },
-        dropShadow: { color: 0xf19b35, blur: 8, distance: 0, alpha: 0.4 },
+        stroke: { color: 0x392914, width: 2 },
+        dropShadow: { color: 0xf19b35, blur: 6, distance: 0, alpha: 0.4 },
       }),
     });
     this.creditText.anchor.set(0, 0.5);
     this.creditText.x = 20;
-    this.creditText.y = 436;
+    this.creditText.y = 417;
     this.addChild(this.creditText);
 
     this.freeSpinsCountText = new Text({
@@ -94,15 +94,15 @@ export class SlotMachine extends Container {
       style: new TextStyle({
         fill: 0x7dded3,
         fontFamily: "Arial",
-        fontSize: 19,
+        fontSize: 16,
         fontWeight: "bold",
         letterSpacing: 1,
-        stroke: { color: 0x123a3a, width: 3 },
+        stroke: { color: 0x123a3a, width: 2 },
       }),
     });
     this.freeSpinsCountText.anchor.set(1, 0.5);
     this.freeSpinsCountText.x = 580;
-    this.freeSpinsCountText.y = 436;
+    this.freeSpinsCountText.y = 417;
     this.addChild(this.freeSpinsCountText);
 
     this.winAmountText = new Text({
@@ -117,7 +117,7 @@ export class SlotMachine extends Container {
     });
     this.winAmountText.anchor.set(0.5);
     this.winAmountText.x = 300;
-    this.winAmountText.y = 432;
+    this.winAmountText.y = 413;
     this.addChild(this.winAmountText);
     this.updateCreditDisplay();
     this.createSpinButton();
