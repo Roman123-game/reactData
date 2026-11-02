@@ -37,7 +37,7 @@ export class SlotMachine extends Container {
     });
     this.freeSpinText.anchor.set(0.5);
     this.freeSpinText.x = 300;
-    this.freeSpinText.y = 452;
+    this.freeSpinText.y = 350;
     this.addChild(this.freeSpinText);
     this.paylines = [
       // Straight lines
@@ -125,6 +125,7 @@ export class SlotMachine extends Container {
     this.createPaytableButton();
     this.createAutoSpinButton();
     this.createReelSpinButtons();
+    this.addChild(this.freeSpinText);
     this.winGreeting = new Text({
       text: "JACKPOT !!!",
       style: new TextStyle({
