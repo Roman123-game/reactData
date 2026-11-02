@@ -305,19 +305,19 @@ export class SlotMachine extends Container {
         style: new TextStyle({
           fill: 0xffffff,
           fontFamily: "Arial",
-          fontSize: 10,
+          fontSize: 8,
           fontWeight: "bold",
           letterSpacing: 1,
         }),
       });
       text.anchor.set(0.5);
-      text.x = 28;
-      text.y = 14;
-      button.x = index * 120 + 32;
+      text.x = 22;
+      text.y = 11;
+      button.x = index * 120 + 38;
       button.y = 365;
       button.eventMode = "static";
       button.cursor = "pointer";
-      button.hitArea = new Rectangle(0, 0, 56, 28);
+      button.hitArea = new Rectangle(0, 0, 44, 22);
       button.addChild(text);
 
       const draw = (state) => {
@@ -334,9 +334,9 @@ export class SlotMachine extends Container {
               ? 0x0e594e
               : 0x16866e;
         button.clear();
-        button.roundRect(0, 2, 56, 26, 8)
+        button.roundRect(0, 2, 44, 20, 6)
           .fill(0x050a12)
-          .roundRect(0, 0, 56, 26, 8)
+          .roundRect(0, 0, 44, 20, 6)
           .fill(faceColor)
           .stroke({ width: 1, color: disabled ? 0x61717a : 0x4fe0bb });
         button.alpha = disabled ? 0.65 : 1;
