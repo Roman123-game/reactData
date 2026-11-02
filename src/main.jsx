@@ -79,7 +79,7 @@ export class SlotFrame extends Container {
     this.addChild(cabinet);
 
     const title = new Text({
-      text: "CRYPTO JACKPOT",
+      text: "CRYPTO SLOTS",
       style: new TextStyle({
         fill: 0xffd778,
         fontFamily: "Arial",

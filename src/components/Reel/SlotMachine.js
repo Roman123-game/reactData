@@ -114,7 +114,7 @@ export class SlotMachine extends Container {
     this.createPaytableButton();
     this.createAutoSpinButton();
     this.winGreeting = new Text({
-      text: "SALUT !!!",
+      text: "JACKPOT !!!",
       style: new TextStyle({
         fill: 0xffd778,
         fontFamily: "Arial",
