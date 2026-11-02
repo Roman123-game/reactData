@@ -8,6 +8,10 @@ The renderer prefers WebGPU and falls back to WebGL when WebGPU is unavailable. 
 
 Reel blur filters are enabled only while spinning to avoid unnecessary filter passes while idle.
 
+## Gameplay
+
+After each completed main spin, one of the five reel buttons can be used once. All five buttons remain unavailable until the next completed main spin.
+
 ## Development
 
 ```sh

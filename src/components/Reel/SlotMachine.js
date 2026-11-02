@@ -17,6 +17,7 @@ export class SlotMachine extends Container {
     this.credits = 100;
     this.isSpinning = false;
     this.isFullSpinInProgress = false;
+    this.canSpinReel = false;
     this.reels = [];
     this.reelSpinsInProgress = new Set();
     this.reelSpinStartSymbols = null;
@@ -323,6 +324,7 @@ export class SlotMachine extends Container {
         const disabled =
           this.isFullSpinInProgress ||
           this.autoSpin ||
+          !this.canSpinReel ||
           this.credits < 5 ||
           this.reelSpinsInProgress.has(index);
         const faceColor = disabled
@@ -347,6 +349,7 @@ export class SlotMachine extends Container {
         if (
           this.isFullSpinInProgress ||
           this.autoSpin ||
+          !this.canSpinReel ||
           this.credits < 5 ||
           this.reelSpinsInProgress.has(index)
         ) return;
@@ -366,6 +369,7 @@ export class SlotMachine extends Container {
       const disabled =
         this.isFullSpinInProgress ||
         this.autoSpin ||
+        !this.canSpinReel ||
         this.credits < 5 ||
         this.reelSpinsInProgress.has(index);
       button.cursor = disabled ? "default" : "pointer";
@@ -435,6 +439,7 @@ export class SlotMachine extends Container {
 
     this.isSpinning = true;
     this.isFullSpinInProgress = true;
+    this.canSpinReel = false;
     this.updateReelSpinButtons();
 
     this.reels.forEach((reel) => reel.start());
@@ -444,6 +449,7 @@ export class SlotMachine extends Container {
         this.checkScatters();
         this.isSpinning = false;
         this.isFullSpinInProgress = false;
+        this.canSpinReel = true;
         this.updateReelSpinButtons();
 
         if (this.freeSpins > 0 || (this.autoSpin && this.autoSpinCount > 0)) {
@@ -467,6 +473,7 @@ export class SlotMachine extends Container {
     if (
       this.isFullSpinInProgress ||
       this.autoSpin ||
+      !this.canSpinReel ||
       this.credits < 5 ||
       this.reelSpinsInProgress.has(index)
     ) return;
@@ -479,6 +486,7 @@ export class SlotMachine extends Container {
       );
       this.winLines.clear();
     }
+    this.canSpinReel = false;
     this.reelSpinsInProgress.add(index);
     this.credits -= 5;
     this.updateCreditDisplay();
