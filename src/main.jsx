@@ -11,10 +11,9 @@ export class SlotFrame extends Container {
     this.isCurrencyHighlighted = false;
     this.highlightAllCurrencies = false;
     this.highlightedCurrencyIndex = -1;
-    this.confettiLayer = new Container();
-    this.confettiParticles = [];
-    this.confettiColors = [0xffd778, 0x34d6c5, 0x9aabff, 0xff6b8a, 0x8b5cf6];
-    app.ticker.add((ticker) => this.updateConfetti(ticker.deltaMS));
+    this.coinLayer = new Container();
+    this.coins = [];
+    app.ticker.add((ticker) => this.updateCoins(ticker.deltaMS));
 
     const backdrop = new Graphics();
     backdrop.rect(0, 0, 1060, 800).fill(0x070b16);
@@ -139,28 +138,45 @@ export class SlotFrame extends Container {
       : Math.floor(Math.random() * this.currencySymbols.length);
     if (this.highlightAllCurrencies) {
       for (let burst = 0; burst < 3; burst++) {
-        setTimeout(() => this.shootConfetti(64), burst * 300);
+        setTimeout(() => this.shootCoins(64), burst * 300);
       }
     } else {
-      this.shootConfetti();
+      this.shootCoins();
     }
   }
 
-  shootConfetti(particlesPerSide = 32) {
+  shootCoins(coinsPerSide = 32) {
     const sides = [
       [0, 140],
       [920, 1060],
     ];
 
     sides.forEach(([minTargetX, maxTargetX]) => {
-      for (let i = 0; i < particlesPerSide; i++) {
+      for (let i = 0; i < coinsPerSide; i++) {
         const radius = 30 + Math.random() * 36;
-        const particle = new Graphics();
-        const color = this.confettiColors[
-          Math.floor(Math.random() * this.confettiColors.length)
-        ];
+        const coin = new Container();
+        const face = new Graphics();
+        face.circle(0, 0, radius)
+          .fill(0xa96316)
+          .stroke({ width: radius * 0.12, color: 0xffe6a3 });
+        face.circle(0, 0, radius * 0.82)
+          .fill(0xf5bd42)
+          .stroke({ width: Math.max(1, radius * 0.045), color: 0xfff0bc });
+        face.circle(0, 0, radius * 0.68)
+          .stroke({ width: Math.max(1, radius * 0.035), color: 0xc17b18 });
+        coin.addChild(face);
 
-        particle.circle(0, 0, radius).fill(color);
+        const symbol = new Text({
+          text: "₿",
+          style: new TextStyle({
+            fill: 0x9b5b13,
+            fontFamily: "Arial",
+            fontSize: radius * 1.05,
+            fontWeight: "bold",
+          }),
+        });
+        symbol.anchor.set(0.5);
+        coin.addChild(symbol);
 
         const originX = 530 + (Math.random() - 0.5) * 24;
         const originY = 782 + Math.random() * 18;
@@ -172,12 +188,12 @@ export class SlotFrame extends Container {
           (2 * (originY - targetY)) / gravity,
         );
 
-        particle.x = originX;
-        particle.y = originY;
-        particle.scale.set(0);
-        this.confettiLayer.addChild(particle);
-        this.confettiParticles.push({
-          particle,
+        coin.x = originX;
+        coin.y = originY;
+        coin.scale.set(0);
+        this.coinLayer.addChild(coin);
+        this.coins.push({
+          sprite: coin,
           originX,
           originY,
           targetX,
@@ -199,69 +215,69 @@ export class SlotFrame extends Container {
     });
   }
 
-  updateConfetti(deltaMS) {
-    for (let i = this.confettiParticles.length - 1; i >= 0; i--) {
-      const confetti = this.confettiParticles[i];
-      confetti.popElapsed = Math.min(confetti.popElapsed + deltaMS, 20);
-      const popProgress = confetti.popElapsed / 20;
-      const popScale = confetti.targetScale * (1 - (1 - popProgress) ** 3);
+  updateCoins(deltaMS) {
+    for (let i = this.coins.length - 1; i >= 0; i--) {
+      const coin = this.coins[i];
+      coin.popElapsed = Math.min(coin.popElapsed + deltaMS, 20);
+      const popProgress = coin.popElapsed / 20;
+      const popScale = coin.targetScale * (1 - (1 - popProgress) ** 3);
 
-      if (confetti.flightElapsed < confetti.flightDuration) {
-        confetti.flightElapsed = Math.min(
-          confetti.flightElapsed + deltaMS,
-          confetti.flightDuration,
+      if (coin.flightElapsed < coin.flightDuration) {
+        coin.flightElapsed = Math.min(
+          coin.flightElapsed + deltaMS,
+          coin.flightDuration,
         );
-        const flightTime = confetti.flightElapsed;
-        const progress = flightTime / confetti.flightDuration;
+        const flightTime = coin.flightElapsed;
+        const progress = flightTime / coin.flightDuration;
         const flutter =
-          Math.sin(progress * 16 + confetti.phase) * confetti.flutter * progress;
-        const initialVelocityY = -confetti.gravity * confetti.flightDuration;
+          Math.sin(progress * 16 + coin.phase) * coin.flutter * progress;
+        const initialVelocityY = -coin.gravity * coin.flightDuration;
 
-        confetti.particle.x =
-          confetti.originX +
-          (confetti.targetX - confetti.originX) * progress +
+        coin.sprite.x =
+          coin.originX +
+          (coin.targetX - coin.originX) * progress +
           flutter;
-        confetti.particle.y =
-          confetti.originY +
+        coin.sprite.y =
+          coin.originY +
           initialVelocityY * flightTime +
-          0.5 * confetti.gravity * flightTime ** 2;
+          0.5 * coin.gravity * flightTime ** 2;
       } else {
-        confetti.fallElapsed = Math.min(
-          confetti.fallElapsed + deltaMS,
-          confetti.fallDuration,
+        coin.fallElapsed = Math.min(
+          coin.fallElapsed + deltaMS,
+          coin.fallDuration,
         );
-        const fallTime = confetti.fallElapsed;
-        const progress = fallTime / confetti.fallDuration;
+        const fallTime = coin.fallElapsed;
+        const progress = fallTime / coin.fallDuration;
 
-        confetti.particle.x = confetti.targetX + confetti.fallDrift * fallTime;
-        confetti.particle.y =
-          confetti.targetY + 0.5 * confetti.gravity * fallTime ** 2;
-        confetti.particle.alpha = Math.min(
+        coin.sprite.x = coin.targetX + coin.fallDrift * fallTime;
+        coin.sprite.y =
+          coin.targetY + 0.5 * coin.gravity * fallTime ** 2;
+        coin.sprite.alpha = Math.min(
           1,
-          (confetti.fallDuration - fallTime) / 180,
+          (coin.fallDuration - fallTime) / 180,
         );
 
         if (progress === 1) {
-          this.confettiLayer.removeChild(confetti.particle);
-          confetti.particle.destroy();
-          this.confettiParticles.splice(i, 1);
+          this.coinLayer.removeChild(coin.sprite);
+          coin.sprite.destroy({ children: true });
+          this.coins.splice(i, 1);
           continue;
         }
       }
 
-      confetti.particle.rotation += deltaMS * confetti.spin;
-      confetti.particle.scale.x = popScale;
-      confetti.particle.scale.y = popScale * (
+      coin.sprite.rotation += deltaMS * coin.spin;
+      coin.sprite.scale.x = popScale;
+      coin.sprite.scale.y = popScale * (
         0.25 +
         Math.abs(
           Math.sin(
-            (confetti.flightElapsed + confetti.fallElapsed) * 0.02 +
-              confetti.phase,
+            (coin.flightElapsed + coin.fallElapsed) * 0.02 +
+              coin.phase,
           ),
         )
       );
-      if (confetti.fallElapsed === 0) {
-        confetti.particle.alpha = 1;
+      if (coin.fallElapsed === 0) {
+        coin.sprite.alpha = 1;
       }
     }
   }
@@ -332,7 +348,7 @@ async function init() {
   slotMachine.y = 140;
   app.stage.addChild(frame);
   app.stage.addChild(slotMachine);
-  app.stage.addChild(frame.confettiLayer);
+  app.stage.addChild(frame.coinLayer);
 }
 
 init();
