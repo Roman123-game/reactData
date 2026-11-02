@@ -1,4 +1,11 @@
-import { Circle, Container, Graphics, Text, TextStyle } from "pixi.js";
+import {
+  Circle,
+  Container,
+  Graphics,
+  Rectangle,
+  Text,
+  TextStyle,
+} from "pixi.js";
 import { Reel } from "./Reel";
 import { Paytable } from "./Paytable";
 export class SlotMachine extends Container {
@@ -9,7 +16,10 @@ export class SlotMachine extends Container {
     this.onWin = onWin;
     this.credits = 100;
     this.isSpinning = false;
+    this.isFullSpinInProgress = false;
     this.reels = [];
+    this.reelSpinsInProgress = new Set();
+    this.reelSpinStartSymbols = null;
     this.freeSpins = 0;
     this.inFreeSpin = false;
     this.autoSpin = false;
@@ -26,7 +36,7 @@ export class SlotMachine extends Container {
     });
     this.freeSpinText.anchor.set(0.5);
     this.freeSpinText.x = 300;
-    this.freeSpinText.y = 427;
+    this.freeSpinText.y = 452;
     this.addChild(this.freeSpinText);
     this.paylines = [
       // Straight lines
@@ -55,10 +65,10 @@ export class SlotMachine extends Container {
     this.x = (app.screen.width - 600) / 2;
     this.y = 80;
     const creditPanel = new Graphics();
-    creditPanel.roundRect(0, 375, 600, 68, 14)
+    creditPanel.roundRect(0, 400, 600, 68, 14)
       .fill({ color: 0x09111d, alpha: 0.96 })
       .stroke({ width: 2, color: 0x34d6c5, alpha: 0.85 });
-    creditPanel.roundRect(5, 380, 590, 58, 10)
+    creditPanel.roundRect(5, 405, 590, 58, 10)
       .stroke({ width: 1, color: 0xe7b75a, alpha: 0.55 });
     this.addChild(creditPanel);
 
@@ -76,7 +86,7 @@ export class SlotMachine extends Container {
     });
     this.creditText.anchor.set(0, 0.5);
     this.creditText.x = 20;
-    this.creditText.y = 411;
+    this.creditText.y = 436;
     this.addChild(this.creditText);
 
     this.freeSpinsCountText = new Text({
@@ -92,7 +102,7 @@ export class SlotMachine extends Container {
     });
     this.freeSpinsCountText.anchor.set(1, 0.5);
     this.freeSpinsCountText.x = 580;
-    this.freeSpinsCountText.y = 411;
+    this.freeSpinsCountText.y = 436;
     this.addChild(this.freeSpinsCountText);
 
     this.winAmountText = new Text({
@@ -107,12 +117,13 @@ export class SlotMachine extends Container {
     });
     this.winAmountText.anchor.set(0.5);
     this.winAmountText.x = 300;
-    this.winAmountText.y = 407;
+    this.winAmountText.y = 432;
     this.addChild(this.winAmountText);
     this.updateCreditDisplay();
     this.createSpinButton();
     this.createPaytableButton();
     this.createAutoSpinButton();
+    this.createReelSpinButtons();
     this.winGreeting = new Text({
       text: "JACKPOT !!!",
       style: new TextStyle({
@@ -274,6 +285,7 @@ export class SlotMachine extends Container {
           },
     );
     draw(this.autoSpin ? "active" : "idle");
+    this.updateReelSpinButtons();
   }
   createSpinButton() {
     this.createButton({
@@ -282,6 +294,83 @@ export class SlotMachine extends Container {
       label: "SPIN",
       colors: { face: 0x16866e, hover: 0x1da88a, border: 0x4fe0bb },
       onClick: () => this.spin(),
+    });
+  }
+  createReelSpinButtons() {
+    this.reelSpinUsed = this.reels.map(() => false);
+    this.reelSpinButtons = this.reels.map((_, index) => {
+      const button = new Graphics();
+      const text = new Text({
+        text: "SPIN",
+        style: new TextStyle({
+          fill: 0xffffff,
+          fontFamily: "Arial",
+          fontSize: 10,
+          fontWeight: "bold",
+          letterSpacing: 1,
+        }),
+      });
+      text.anchor.set(0.5);
+      text.x = 28;
+      text.y = 14;
+      button.x = index * 120 + 32;
+      button.y = 365;
+      button.eventMode = "static";
+      button.cursor = "pointer";
+      button.hitArea = new Rectangle(0, 0, 56, 28);
+      button.addChild(text);
+
+      const draw = (state) => {
+        const disabled =
+          this.isFullSpinInProgress ||
+          this.autoSpin ||
+          this.credits < 5 ||
+          this.reelSpinUsed[index];
+        const faceColor = disabled
+          ? 0x34434b
+          : state === "hover"
+            ? 0x1da88a
+            : state === "pressed"
+              ? 0x0e594e
+              : 0x16866e;
+        button.clear();
+        button.roundRect(0, 2, 56, 26, 8)
+          .fill(0x050a12)
+          .roundRect(0, 0, 56, 26, 8)
+          .fill(faceColor)
+          .stroke({ width: 1, color: disabled ? 0x61717a : 0x4fe0bb });
+        button.alpha = disabled ? 0.65 : 1;
+      };
+
+      button.on("pointerover", () => draw("hover"));
+      button.on("pointerout", () => draw("idle"));
+      button.on("pointerdown", () => {
+        if (
+          this.isFullSpinInProgress ||
+          this.autoSpin ||
+          this.credits < 5 ||
+          this.reelSpinUsed[index]
+        ) return;
+        draw("pressed");
+        this.spinReel(index);
+      });
+      button.on("pointerup", () => draw("hover"));
+      button.on("pointerupoutside", () => draw("idle"));
+
+      this.addChild(button);
+      return { button, draw };
+    });
+    this.updateReelSpinButtons();
+  }
+  updateReelSpinButtons() {
+    this.reelSpinButtons?.forEach(({ button, draw }, index) => {
+      const disabled =
+        this.isFullSpinInProgress ||
+        this.autoSpin ||
+        this.credits < 5 ||
+        this.reelSpinUsed[index];
+      button.cursor = disabled ? "default" : "pointer";
+      draw("idle");
     });
   }
   createPaytableButton() {
@@ -307,7 +396,7 @@ export class SlotMachine extends Container {
     await Promise.all(stopPromises);
   }
   spin() {
-    if (this.isSpinning) return;
+    if (this.isFullSpinInProgress || this.reelSpinsInProgress.size > 0) return;
 
     // Stop auto spin when limit reached
     if (this.autoSpin && this.autoSpinCount <= 0) {
@@ -346,14 +435,17 @@ export class SlotMachine extends Container {
     this.winLines.clear();
 
     this.isSpinning = true;
+    this.isFullSpinInProgress = true;
+    this.updateReelSpinButtons();
 
     this.reels.forEach((reel) => reel.start());
     this.stopReels().then(() => {
       setTimeout(() => {
         this.checkWin();
         this.checkScatters();
-
         this.isSpinning = false;
+        this.isFullSpinInProgress = false;
+        this.updateReelSpinButtons();
 
         if (this.freeSpins > 0 || (this.autoSpin && this.autoSpinCount > 0)) {
           setTimeout(() => {
@@ -372,25 +464,105 @@ export class SlotMachine extends Container {
       }, 250);
     });
   }
-  checkScatters() {
-    let scatters = 0;
-    this.reels.forEach((reel) => {
-      reel.currentSymbols.forEach((symbol) => {
-        if (symbol.type === "scatter") {
-          scatters++;
+  async spinReel(index) {
+    if (
+      this.isFullSpinInProgress ||
+      this.autoSpin ||
+      this.credits < 5 ||
+      this.reelSpinUsed[index] ||
+      this.reelSpinsInProgress.has(index)
+    ) return;
+
+    const reel = this.reels[index];
+    if (!reel) return;
+    if (this.reelSpinsInProgress.size === 0) {
+      this.reelSpinStartSymbols = this.reels.map((currentReel) =>
+        currentReel.currentSymbols.slice(),
+      );
+      this.winLines.clear();
+    }
+    this.reelSpinUsed[index] = true;
+    this.reelSpinsInProgress.add(index);
+    this.credits -= 5;
+    this.updateCreditDisplay();
+    this.updateReelSpinButtons();
+    reel.start();
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1900));
+      await reel.stop();
+    } finally {
+      this.reelSpinsInProgress.delete(index);
+      if (this.reelSpinsInProgress.size === 0) {
+        const previousSymbols = this.reelSpinStartSymbols;
+        this.reelSpinStartSymbols = null;
+        const win = this.checkReelSpinWin(previousSymbols);
+        this.checkReelSpinScatters(previousSymbols);
+        if (win > 0) {
+          this.credits += win;
+          this.updateCreditDisplay(win);
+          this.showWinGreeting();
+          this.onWin(win);
+        } else {
+          this.updateCreditDisplay();
         }
-      });
-    });
-    let awarded = 0;
-    if (scatters === 3) {
-      awarded = 1;
+      }
+      this.updateReelSpinButtons();
     }
-    if (scatters === 4) {
-      awarded = 5;
+  }
+  checkReelSpinWin(previousSymbols) {
+    let win = 0;
+    for (const line of this.paylines) {
+      const currentLine = line.map(
+        (row, index) => this.reels[index].currentSymbols[row],
+      );
+      const previousLine = line.map(
+        (row, index) => previousSymbols[index][row],
+      );
+      const payoutIncrease =
+        this.checkLine(currentLine) - this.checkLine(previousLine);
+      if (payoutIncrease > 0) {
+        win += payoutIncrease;
+        this.drawWinLine(line);
+      }
     }
-    if (scatters >= 5) {
-      awarded = 10;
+    return win;
+  }
+  checkReelSpinScatters(previousSymbols) {
+    const previousCount = previousSymbols.flat().filter(
+      (symbol) => symbol.type === "scatter",
+    ).length;
+    const currentCount = this.reels.reduce(
+      (count, reel) =>
+        count +
+        reel.currentSymbols.filter((symbol) => symbol.type === "scatter").length,
+      0,
+    );
+    const awarded = Math.max(
+      0,
+      this.getFreeSpinAward(currentCount) -
+        this.getFreeSpinAward(previousCount),
+    );
+    if (awarded > 0) {
+      this.freeSpins += awarded;
+      this.updateCreditDisplay();
+      this.freeSpinText.text = `🎉 ${currentCount} SCATTERS +${awarded} FREE SPINS`;
     }
+  }
+  getFreeSpinAward(scatters) {
+    if (scatters === 3) return 1;
+    if (scatters === 4) return 5;
+    if (scatters >= 5) return 10;
+    return 0;
+  }
+  checkScatters() {
+    const scatters = this.reels.reduce(
+      (count, reel) =>
+        count +
+        reel.currentSymbols.filter((symbol) => symbol.type === "scatter").length,
+      0,
+    );
+    const awarded = this.getFreeSpinAward(scatters);
     if (awarded > 0) {
       this.freeSpins += awarded;
       this.updateCreditDisplay();
