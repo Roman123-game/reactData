@@ -297,7 +297,6 @@ export class SlotMachine extends Container {
     });
   }
   createReelSpinButtons() {
-    this.reelSpinUsed = this.reels.map(() => false);
     this.reelSpinButtons = this.reels.map((_, index) => {
       const button = new Graphics();
       const text = new Text({
@@ -325,7 +324,7 @@ export class SlotMachine extends Container {
           this.isFullSpinInProgress ||
           this.autoSpin ||
           this.credits < 5 ||
-          this.reelSpinUsed[index];
+          this.reelSpinsInProgress.has(index);
         const faceColor = disabled
           ? 0x34434b
           : state === "hover"
@@ -349,7 +348,7 @@ export class SlotMachine extends Container {
           this.isFullSpinInProgress ||
           this.autoSpin ||
           this.credits < 5 ||
-          this.reelSpinUsed[index]
+          this.reelSpinsInProgress.has(index)
         ) return;
         draw("pressed");
         this.spinReel(index);
@@ -368,7 +367,7 @@ export class SlotMachine extends Container {
         this.isFullSpinInProgress ||
         this.autoSpin ||
         this.credits < 5 ||
-        this.reelSpinUsed[index];
+        this.reelSpinsInProgress.has(index);
       button.cursor = disabled ? "default" : "pointer";
       draw("idle");
     });
@@ -469,7 +468,6 @@ export class SlotMachine extends Container {
       this.isFullSpinInProgress ||
       this.autoSpin ||
       this.credits < 5 ||
-      this.reelSpinUsed[index] ||
       this.reelSpinsInProgress.has(index)
     ) return;
 
@@ -481,7 +479,6 @@ export class SlotMachine extends Container {
       );
       this.winLines.clear();
     }
-    this.reelSpinUsed[index] = true;
     this.reelSpinsInProgress.add(index);
     this.credits -= 5;
     this.updateCreditDisplay();
