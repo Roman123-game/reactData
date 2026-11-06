@@ -209,7 +209,7 @@ export class SlotMachine extends Container {
     const radius = width / 2;
     text.x = centerX;
     text.y = centerY;
-    button.y = 477;
+    button.y = 478;
     button.eventMode = "static";
     button.cursor = "pointer";
     button.hitArea = new Circle(centerX, centerY + 8, radius);
@@ -316,7 +316,7 @@ export class SlotMachine extends Container {
       text.x = 22;
       text.y = 11;
       button.x = index * 120 + 38;
-      button.y = 368;
+      button.y = 369;
       button.eventMode = "static";
       button.cursor = "pointer";
       button.hitArea = new Rectangle(0, 0, 44, 22);
